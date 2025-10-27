@@ -35,6 +35,11 @@ public class SignupRequestDto {
 
     // 기존 UserCreateRequestDto로 변환 (네이밍은 프로젝트에 맞게)
     public UserCreateRequestDto toCreateDto() {
-        return new UserCreateRequestDto(username, password, nickname, email);
+        return UserCreateRequestDto.builder()
+                .username(username)
+                .password(password)
+                .nickname(nickname)
+                .email(email)
+                .build();
     }
 }

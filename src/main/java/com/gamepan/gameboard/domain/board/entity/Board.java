@@ -1,12 +1,8 @@
 package com.gamepan.gameboard.domain.board.entity;
 
-import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor

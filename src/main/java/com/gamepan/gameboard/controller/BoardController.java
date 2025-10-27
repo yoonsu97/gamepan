@@ -34,21 +34,21 @@ public class BoardController {
         return ResponseEntity.ok(boards);
     }
     // 게시판 1개 가져오기 - GET /boards/{board_id}
-    @GetMapping("/{board_id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long id) {
         Board board = boardService.getBoard(id);
         return ResponseEntity.ok(BoardResponseDto.from(board));
     }
 
     // 게시글 수정(작성자, 관리자 권한)  - PUT /posts/{postId}
-    @PutMapping("/{postId}")
+    @PutMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto dto) {
         Board updated = boardService.updateBoard(id,dto);
         return ResponseEntity.ok(BoardResponseDto.from(updated));
     }
 
     // 게시판 삭제(관리자 기능) -  DELETE /boards/{board_id}
-    @DeleteMapping("/{board_id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
         boardService.deleteBoard(id);
         return ResponseEntity.noContent().build();

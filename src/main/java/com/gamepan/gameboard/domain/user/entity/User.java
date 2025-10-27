@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     private Role role;              // 사용자 권환
 
     @Column(nullable = false)
-    private boolean deleted;  //=false;
+    private boolean isDeleted = false;
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;

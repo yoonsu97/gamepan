@@ -2,10 +2,12 @@ package com.gamepan.gameboard.domain.user.dto;
 
 import com.gamepan.gameboard.domain.user.entity.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(staticName = "from")
+@Builder
 public class UserResponseDto {
     private Long id;
     private String username;
@@ -14,11 +16,11 @@ public class UserResponseDto {
 
 
     public static UserResponseDto from(User user) {
-        return new UserResponseDto(
-                user.getId(),
-                user.getUsername(),
-                user.getNickname(),
-                user.getEmail()
-        );
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .build();
     }
 }
