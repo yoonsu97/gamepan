@@ -1,15 +1,19 @@
 package com.gamepan.gameboard.domain.post.service;
 
+import com.gamepan.gameboard.domain.board.entity.Board;
+import com.gamepan.gameboard.domain.board.repository.BoardRepository;
 import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
 import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
+import com.gamepan.gameboard.domain.user.entity.User;
+import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 // 게시글 관련 비즈니스 로직 처리를 위한 서비스
 @Service
@@ -17,12 +21,19 @@ import java.util.stream.Collectors;
 @Transactional // DB 관련 작업 Transactional 묶어서 작업
 public class PostService {
     private final PostRepository postRepository; //DB 접근을 위한 Repository 의존성 주입
+    private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
 
     // 게시글 생성 메서드
     public Post createPost(PostRequestDto dto) {
+        Board board = boardRepository.findById(dto.getBoardId())
+                .orElseThrow(() -> new RuntimeException("게시판 없음"));
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new RuntimeException("유저 없음"));
+
         Post post = Post.builder()
-                .board(dto.getBoard())
-                .user(dto.getUser())
+                .board(board)
+                .user(user)
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .build();

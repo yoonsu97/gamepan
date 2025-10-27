@@ -10,9 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PostRequestDto { // 요청
-    private Board board;
-    private User user;
+    private Long boardId;
+    private Long userId;
     private String title;
     private String content;
-
 }
