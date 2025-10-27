@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 public class PostResponseDto { // 응답
     private Long id;
-    private Board board;
-    private User user;
+    private Long boardId;
+    private Long userId;
     private String title;
     private String content;
     private int viewCount;
@@ -24,8 +24,8 @@ public class PostResponseDto { // 응답
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
-                .user(post.getUser())
-                .board(post.getBoard())
+                .userId(post.getUser().getId())
+                .boardId(post.getBoard().getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .viewCount(post.getViewCount())
