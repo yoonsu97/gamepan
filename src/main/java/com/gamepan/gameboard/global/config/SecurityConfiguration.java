@@ -39,18 +39,9 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                /*.csrf(csrf -> csrf.disable())*/               // CSRF - 사이트 간 요청 위조
+                .csrf(csrf -> csrf.disable())               // CSRF - 사이트 간 요청 위조
                                                                                     // CSRF 보호 기능을 임시로 끈다. 세션 인증 완성 시 다시 켠다.
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(
-                                "/swagger-ui/",
-                                "/v3/api-docs/",
-                                "/login",
-                                "/logout",
-                                "/api/**"
-                        )
-                )
+
 
                 .authorizeHttpRequests(auth -> auth     // 각 경로 접근 권한 지정
                         .requestMatchers("/","/login", "/signup","/css/**", "/js/**").permitAll() // 누구나 접근 가능

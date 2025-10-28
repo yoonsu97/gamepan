@@ -19,7 +19,8 @@ public class PostController {
 
     //게시글 등록
     @PostMapping("/boards/{boardId}/posts")
-    public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto dto) {
+    public ResponseEntity<PostResponseDto> createPost(@PathVariable Long boardId, @RequestBody PostRequestDto dto) {
+        dto.setBoardId(boardId);
         Post post = postService.createPost(dto);
         return ResponseEntity.ok(PostResponseDto.from(post));
     }
@@ -50,8 +51,15 @@ public class PostController {
 
     // 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> softDeletePost(@PathVariable Long id) {
+        postService.softDeletePost(id);
+        return ResponseEntity.ok("게시글이 삭제(soft delete)되었습니다.");
+    }
+
+    // 게시글 복구
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<String> restorePost(@PathVariable Long id) {
+        postService.restorePost(id);
+        return ResponseEntity.ok("게시글이 복구되었습니다.");
     }
 }

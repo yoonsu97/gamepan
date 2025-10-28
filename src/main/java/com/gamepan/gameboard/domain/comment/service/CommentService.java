@@ -26,6 +26,10 @@ public class CommentService {
         Post post = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
 
+        if (post.isDeleted()) {
+            throw new IllegalStateException("삭제된 게시글에는 댓글을 작성할 수 없습니다.");
+        }
+
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
@@ -40,6 +44,13 @@ public class CommentService {
 
     // 게시글별 댓글 조회
     public List<Comment> getCommentsByPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글 없음"));
+
+        if (post.isDeleted()) {
+            throw new IllegalStateException("삭제된 게시글의 댓글은 조회할 수 없습니다.");
+        }
+
         return commentRepository.findAllByPostId(postId);
     }
 
@@ -47,16 +58,27 @@ public class CommentService {
     public Comment updateComment(Long id, CommentRequestDto dto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        Post post = comment.getPost();
+        if (post.isDeleted()) {
+            throw new IllegalStateException("삭제된 게시글의 댓글은 수정할 수 없습니다.");
+        }
+
         comment.setContent(dto.getContent());
         return commentRepository.save(comment);
     }
 
     // 댓글 삭제
     public void deleteComment(long id) {
-        if (!commentRepository.existsById(id)) {
-            throw new IllegalArgumentException("삭제할 댓글이 존재하지 않습니다.");
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        Post post = comment.getPost();
+        if (post.isDeleted()) {
+            throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
         }
-        commentRepository.deleteById(id);
+
+        commentRepository.delete(comment);
     }
 
 
