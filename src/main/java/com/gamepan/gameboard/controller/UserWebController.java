@@ -1,0 +1,77 @@
+package com.gamepan.gameboard.controller;
+
+import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
+import com.gamepan.gameboard.domain.user.dto.UserElevateRequestDto;
+import com.gamepan.gameboard.domain.user.dto.UserResponseDto;
+import com.gamepan.gameboard.domain.user.dto.UserUpdateRequestDto;
+import com.gamepan.gameboard.domain.user.entity.Role;
+import com.gamepan.gameboard.domain.user.entity.User;
+import com.gamepan.gameboard.domain.user.service.UserService;
+import com.gamepan.gameboard.global.api.ApiResponse;
+import com.gamepan.gameboard.global.security.CustomUserDetails;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/users")
+@RequiredArgsConstructor
+public class UserWebController {
+
+    private final UserService userService;
+
+    /** ✅ 모든 사용자 조회 (GET /api/users) */
+    @GetMapping
+    public String getAllUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user/list";
+    }
+
+    /** ✅ 특정 사용자 조회 (GET /api/users/{id}) */
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(UserResponseDto.from(user));
+    }
+
+    /** ✅ 사용자 등록 (POST /api/users) */
+    @PostMapping
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateRequestDto request) {
+        User user = userService.createUser(request, Role.USER);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDto.from(user));
+    }
+
+    /** ✅ 사용자 수정 (PUT /api/users/{id}) */
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequestDto request) {
+        User updated = userService.updateUser(id, request);
+        return ResponseEntity.ok(UserResponseDto.from(updated));
+    }
+
+    /** ✅ 사용자 삭제 (DELETE /api/users/{id}) */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 일반 유저에서 인증 코드를 통한 관리자 승급
+    // fixme: 초대 코드로 현재 권한을 받으면 즉시 권한이 부여되는게 아니라 재로그인시 권한이 부여됨.
+    @PostMapping("/invite")
+    public ResponseEntity<ApiResponse<Void>> invite(@Valid @RequestBody UserElevateRequestDto dto,
+                                                    @AuthenticationPrincipal CustomUserDetails principal) {
+        userService.inviteToAdmin(principal.getUser().getId(), dto.getInviteCode());
+        return ResponseEntity.ok(ApiResponse.ok(null, "관리자로 승격되었습니다."));
+    }
+
+}
+
