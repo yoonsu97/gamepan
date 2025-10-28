@@ -40,17 +40,24 @@ public class BoardController {
         return ResponseEntity.ok(BoardResponseDto.from(board));
     }
 
-    // 게시글 수정(작성자, 관리자 권한)  - PUT /posts/{postId}
+    // 게시글 수정(작성자, 관리자 권한)
     @PutMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto dto) {
         Board updated = boardService.updateBoard(id,dto);
         return ResponseEntity.ok(BoardResponseDto.from(updated));
     }
 
-    // 게시판 삭제(관리자 기능) -  DELETE /boards/{board_id}
+    // 게시판 soft delete (관리자 기능) -  DELETE /boards/{board_id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
-        boardService.deleteBoard(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> softDeleteBoard(@PathVariable Long id) {
+        boardService.softDeleteBoard(id);
+        return ResponseEntity.ok("게시판이 삭제(soft delete)되었습니다.");
+    }
+
+    // 게시판 복구
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<String> restoreBoard(@PathVariable Long id) {
+        boardService.restoreBoard(id);
+        return ResponseEntity.ok("게시판이 복구되었습니다.");
     }
 }

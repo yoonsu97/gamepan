@@ -60,9 +60,16 @@ public class UserController {
 
     /** ✅ 사용자 삭제 (DELETE /api/users/{id}) */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> softDeleteUser(@PathVariable Long id) {
+        userService.softDeleteUser(id);
+        return ResponseEntity.ok("사용자가 삭제(soft delete)되었습니다.");
+    }
+
+    // ✅ 게시글 복구
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<String> restoreUser(@PathVariable Long id) {
+        userService.restoreUser(id);
+        return ResponseEntity.ok("사용자가 복구되었습니다.");
     }
 
     // 일반 유저에서 인증 코드를 통한 관리자 승급

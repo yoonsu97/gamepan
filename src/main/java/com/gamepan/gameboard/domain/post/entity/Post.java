@@ -5,6 +5,8 @@ import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @NoArgsConstructor
@@ -12,6 +14,10 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+//delete를 할 경우 이 쿼리로 대체하여 보냄
+@SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
+// 조회할 때 “deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
+@Where(clause = "is_deleted = false")
 public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +45,20 @@ public class Post extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "INT DEFAULT 0") // 마이너스 없애기
     private int commentCount;               // 게시글 댓글 수
+
+
+    @Column(nullable = false)
+    private boolean isDeleted = false;
+
+    // 게시글 soft Delete
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+
+    // 게시글 복구
+    public void restore() {
+        this.isDeleted = false;
+    }
 
     //private LocalDateTime deletedAt;        // 게시글 삭제일(선택)
 

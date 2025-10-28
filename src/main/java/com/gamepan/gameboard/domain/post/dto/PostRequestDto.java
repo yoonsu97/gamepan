@@ -12,4 +12,5 @@ import lombok.*;
 public class PostRequestDto { // 요청
     private String title;
     private String content;
+
 }

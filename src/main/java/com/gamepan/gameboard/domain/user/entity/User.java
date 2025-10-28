@@ -41,6 +41,14 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private boolean isDeleted = false;
 
+    public void softDelete() {
+        this.isDeleted = true;
+    }
+
+    public void restore() {
+        this.isDeleted = false;
+    }
+
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }

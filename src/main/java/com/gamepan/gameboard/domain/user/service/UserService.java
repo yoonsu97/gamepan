@@ -1,5 +1,6 @@
 package com.gamepan.gameboard.domain.user.service;
 
+import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
 import com.gamepan.gameboard.domain.user.dto.UserUpdateRequestDto;
 import com.gamepan.gameboard.domain.user.entity.Role;
@@ -75,10 +76,22 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    //Deleted - 사용자 삭제 (소프트 딜리트)
-    public void deleteUser(Long id) {
-        User user = getUserById(id);
-        userRepository.delete(user);
+    //  삭제 (Soft Delete 적용)
+    public void softDeleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("삭제할 사용자가 존재하지 않습니다."));
+
+        user.softDelete(); // BaseEntity의 softDelete() 메서드 호출
+        userRepository.save(user);
+    }
+
+    //  복구
+    public void restoreUser(Long id) {
+        User user = userRepository.findByIdIncludingDeleted(id)
+                .orElseThrow(() -> new IllegalArgumentException("복구할 사용자가 존재하지 않습니다."));
+
+        user.restore(); // BaseEntity의 restore() 메서드 호출
+        userRepository.save(user);
     }
 
     // 권한이 존재하는지 확인 (admin 권한 부여에 사용)
