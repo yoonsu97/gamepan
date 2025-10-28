@@ -66,7 +66,7 @@ public class PostService {
     }
 
     // 삭제
-    public  void deletePost(Long id) {
+    public void deletePost(Long id) {
         // 게시글 있는지 확인.
         if (!postRepository.existsById(id)) {
             throw new IllegalArgumentException("삭제할 게시글이 존재하지 않습니다.");

@@ -51,7 +51,7 @@ public class BoardService {
     // 게시판 삭제
     public void deleteBoard(Long id) {
         if (!boardRepository.existsById(id)) {
-            throw new IllegalArgumentException("삭제할 게시글이 존재하지 않습니다.");
+            throw new IllegalArgumentException("삭제할 게시판이 존재하지 않습니다.");
         }
         boardRepository.deleteById(id);
     }
