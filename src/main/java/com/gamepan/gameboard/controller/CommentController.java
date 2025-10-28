@@ -4,8 +4,10 @@ import com.gamepan.gameboard.domain.comment.dto.CommentRequestDto;
 import com.gamepan.gameboard.domain.comment.dto.CommentResponseDto;
 import com.gamepan.gameboard.domain.comment.entity.Comment;
 import com.gamepan.gameboard.domain.comment.service.CommentService;
+import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +22,11 @@ public class CommentController {
 
     // 댓글 생성
     @PostMapping
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId, @RequestBody CommentRequestDto dto) {
-        dto.setPostId(postId);
-        Comment comment = commentService.createComment(dto);
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long postId,
+                                                            @AuthenticationPrincipal CustomUserDetails principal,
+                                                            @RequestBody CommentRequestDto dto) {
+        Long currentUserId = principal.getUser().getId();
+        Comment comment = commentService.createComment(postId, currentUserId, dto);
         return ResponseEntity.ok(CommentResponseDto.from(comment));
     }
 
@@ -45,7 +49,7 @@ public class CommentController {
 
     // 댓글 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<CommentResponseDto> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
     }

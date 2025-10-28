@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
-public class adminController {
+public class AdminController {
     private final UserService userService;
 
     //권한이 부여됐는지 확인하는 경로

@@ -4,7 +4,6 @@ import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -15,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
 // 조회할 때 “is_deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
-@Where(clause = "is_deleted = false")
+/*@Where(clause = "is_deleted = false")*/
 // 시용자(유저) 엔티티
 public class User extends BaseEntity {
     @Id

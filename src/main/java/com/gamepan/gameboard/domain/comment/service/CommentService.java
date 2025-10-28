@@ -22,15 +22,15 @@ public class CommentService {
     private final UserRepository userRepository;
 
     //댓글 생성
-    public Comment createComment(CommentRequestDto dto) {
-        Post post = postRepository.findById(dto.getPostId())
+    public Comment createComment(Long postId,Long currentUserId,CommentRequestDto dto) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
 
         if (post.isDeleted()) {
             throw new IllegalStateException("삭제된 게시글에는 댓글을 작성할 수 없습니다.");
         }
 
-        User user = userRepository.findById(dto.getUserId())
+        User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         Comment comment = Comment.builder()
@@ -55,7 +55,7 @@ public class CommentService {
     }
 
     // 댓글 수정
-    public Comment updateComment(Long id, CommentRequestDto dto) {
+    public Comment updateComment(Long id ,CommentRequestDto dto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 

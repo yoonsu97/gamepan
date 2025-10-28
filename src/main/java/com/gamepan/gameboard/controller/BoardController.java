@@ -4,8 +4,10 @@ import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
 import com.gamepan.gameboard.domain.board.dto.BoardResponseDto;
 import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.board.service.BoardService;
+import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,9 +51,10 @@ public class BoardController {
 
     // 게시판 soft delete (관리자 기능) -  DELETE /boards/{board_id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> softDeleteBoard(@PathVariable Long id) {
-        boardService.softDeleteBoard(id);
-        return ResponseEntity.ok("게시판이 삭제(soft delete)되었습니다.");
+    public ResponseEntity<Void> softDeleteBoard(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails principal) {
+        Long currentUserId = principal.getUser().getId();
+        boardService.softDeleteBoard(id, currentUserId);
+        return ResponseEntity.noContent().build();
     }
 
     // 게시판 복구

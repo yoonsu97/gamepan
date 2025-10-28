@@ -3,14 +3,16 @@ package com.gamepan.gameboard.domain.post.service;
 import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.board.repository.BoardRepository;
 import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
-import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
+import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,15 +26,12 @@ public class PostService {
     private final BoardRepository boardRepository;
 
     // 게시글 생성 메서드
-    public Post createPost(PostRequestDto dto) {
-        Board board = boardRepository.findById(dto.getBoardId())
-                .orElseThrow(() -> new RuntimeException("게시판 없음"));
-        if (board.isDeleted()) {
-            throw new IllegalArgumentException("삭제된 게시판에는 게시글을 작성할 수 없습니다.");
-        }
+    public Post createPost(Long boardId, Long userId, PostRequestDto dto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시판을 찾을 수 없습니다."));
 
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("유저 없음"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
         Post post = Post.builder()
                 .board(board)
@@ -40,8 +39,10 @@ public class PostService {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .build();
+
         return postRepository.save(post);
     }
+
 
     // 게시판 내에 전체 게시글 조회
     public List<Post> getAllPosts(Long boardId) {
@@ -51,7 +52,7 @@ public class PostService {
         if (board.isDeleted()) {
             throw new IllegalStateException("삭제된 게시판의 게시글은 조회할 수 없습니다.");
         }
-        return postRepository.findAllByBoardId(boardId);
+        return postRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
     }
 
     // 상세조회
@@ -68,13 +69,19 @@ public class PostService {
     }
 
     // 게시글 수정
-    public Post updatePost(Long id, PostRequestDto dto) {
+    public Post updatePost(Long id, Long currentUserId,PostRequestDto dto) {
         // 기존 기시글 찾기. 없으면 예외
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("수정할 게시글을 찾을 수 없습니다"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "수정 할 게시글이 없습니다."));
+
         if (post.isDeleted() || post.getBoard().isDeleted()) {
             throw new IllegalStateException("삭제된 게시글은 수정할 수 없습니다.");
         }
+
+        if(!post.getUser().getId().equals(currentUserId) || !post.getUser().getRole().equals(Role.ADMIN)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
+        }
+
         // 기존 엔티티 변경 -> 이미 있는거를 조회해서, 제목이랑 내용 수정하기 위함.
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -84,9 +91,14 @@ public class PostService {
     }
 
     //  게시글 삭제 (Soft Delete 적용)
-    public void softDeletePost(Long id) {
+    public void softDeletePost(Long id, Long currentUserId) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("삭제할 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 할 게시글이 없습니다."));
+
+        if(!post.getUser().getId().equals(currentUserId) || !post.getUser().getRole().equals(Role.ADMIN)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다.");
+        }
+
 
         post.softDelete(); // BaseEntity의 softDelete() 메서드 호출
         postRepository.save(post);
@@ -94,13 +106,14 @@ public class PostService {
 
     //  게시글 복구
     public void restorePost(Long id) {
-        Post post = postRepository.findByIdIncludingDeleted(id)
-                .orElseThrow(() -> new IllegalArgumentException("복구할 게시글이 존재하지 않습니다."));
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "복구 할 게시글이 없습니다."));
 
         // 게시판이 삭제된 경우 복구 불가
         if (post.getBoard().isDeleted()) {
             throw new IllegalStateException("삭제된 게시판의 게시글은 복구할 수 없습니다.");
         }
+
 
         // 이미 복구된 게시글이면 예외
         if (!post.isDeleted()) {

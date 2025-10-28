@@ -60,9 +60,9 @@ public class UserController {
 
     /** ✅ 사용자 삭제 (DELETE /api/users/{id}) */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> softDeleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {
         userService.softDeleteUser(id);
-        return ResponseEntity.ok("사용자가 삭제(soft delete)되었습니다.");
+        return ResponseEntity.noContent().build();
     }
 
     // ✅ 게시글 복구

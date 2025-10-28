@@ -1,6 +1,5 @@
 package com.gamepan.gameboard.domain.user.service;
 
-import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
 import com.gamepan.gameboard.domain.user.dto.UserUpdateRequestDto;
 import com.gamepan.gameboard.domain.user.entity.Role;
@@ -33,10 +32,10 @@ public class UserService {
     // Create - 유저 객체 만들기
     public User createUser(UserCreateRequestDto dto, Role role) {
         // 유저 객체 생성전 중복 검사 (username, email)
-        if (userRepository.existsByUsername(dto.getUsername())) {
+        if (userRepository.existsByUsernameAndIsDeletedFalse(dto.getUsername())) {
             throw new DuplicateUsernameException();
         }
-        if (userRepository.existsByEmail(dto.getEmail())) {
+        if (userRepository.existsByEmailAndIsDeletedFalse(dto.getEmail())) {
             throw new DuplicateEmailException();
         }
 
@@ -87,7 +86,7 @@ public class UserService {
 
     //  복구
     public void restoreUser(Long id) {
-        User user = userRepository.findByIdIncludingDeleted(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("복구할 사용자가 존재하지 않습니다."));
 
         user.restore(); // BaseEntity의 restore() 메서드 호출
@@ -96,13 +95,13 @@ public class UserService {
 
     // 권한이 존재하는지 확인 (admin 권한 부여에 사용)
     public boolean existsByRole(Role role) {
-        return userRepository.existsByRole(role);
+        return userRepository.existsByRoleAndIsDeletedFalse(role);
     }
 
     // Admin 권한 부여
     @Transactional
     public void promoteToAdminByUsername(String username) {
-        var user = userRepository.findByUsername(username)
+        var user = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 찾을 수 없습니다. " + username));
         if (user.getRole() != Role.ADMIN) {
             user.setAdmin();             // 내부에서 role=ADMIN 세팅

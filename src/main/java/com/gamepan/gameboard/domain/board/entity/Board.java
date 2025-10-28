@@ -5,7 +5,7 @@ import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @SQLDelete(sql = "UPDATE board SET is_deleted = true WHERE id = ?")
 // 조회할 때 “deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
-@Where(clause = "is_deleted = false")
+/*@Where(clause = "is_deleted = false")*/
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
