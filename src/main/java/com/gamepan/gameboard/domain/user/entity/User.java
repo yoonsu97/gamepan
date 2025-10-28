@@ -13,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
-@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
-// 조회할 때 “deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
-@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
+// 조회할 때 “is_deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
+@Where(clause = "is_deleted = false")
 // 시용자(유저) 엔티티
 public class User extends BaseEntity {
     @Id
@@ -47,5 +47,9 @@ public class User extends BaseEntity {
 
     public void updatePassword(String rawPassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(rawPassword);
+    }
+
+    public void setAdmin(){
+        role =  Role.ADMIN;
     }
 }

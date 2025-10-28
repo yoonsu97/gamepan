@@ -9,6 +9,7 @@ import com.gamepan.gameboard.domain.user.exception.DuplicateUsernameException;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,6 +25,9 @@ import static org.springframework.http.HttpStatus.*;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.invite-code:}")   // application-*.yml 에 설정해둔 초대코드
+    private String adminInviteCode;
 
     // Create - 유저 객체 만들기
     public User createUser(UserCreateRequestDto dto, Role role) {
@@ -75,5 +79,42 @@ public class UserService {
     public void deleteUser(Long id) {
         User user = getUserById(id);
         userRepository.delete(user);
+    }
+
+    // 권한이 존재하는지 확인 (admin 권한 부여에 사용)
+    public boolean existsByRole(Role role) {
+        return userRepository.existsByRole(role);
+    }
+
+    // Admin 권한 부여
+    @Transactional
+    public void promoteToAdminByUsername(String username) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 찾을 수 없습니다. " + username));
+        if (user.getRole() != Role.ADMIN) {
+            user.setAdmin();             // 내부에서 role=ADMIN 세팅
+            // 변경감지로 flush됨(트랜잭션 활성 상태)
+        }
+    }
+
+    @Transactional
+    public void inviteToAdmin(Long userId, String inviteCode) {
+
+        // 1) 기능 토글/코드 미설정 방어
+        if (adminInviteCode == null || adminInviteCode.isBlank()) {
+            throw new IllegalStateException("관리자 승격 기능이 비활성화되어 있습니다.");
+        }
+
+        // 2) 코드 검증
+        if (!adminInviteCode.equals(inviteCode)) {
+            throw new IllegalArgumentException("Admin 초대 코드가 올바르지 않습니다.");
+        }
+
+        // 3) 유저 조회 및 승격
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        user.setAdmin(); // 내부에서 role = ADMIN 으로 세팅되는 메서드
+        // 변경감지로 업데이트 반영
     }
 }

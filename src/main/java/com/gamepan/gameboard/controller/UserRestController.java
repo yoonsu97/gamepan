@@ -1,14 +1,19 @@
 package com.gamepan.gameboard.controller;
 
 import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
+import com.gamepan.gameboard.domain.user.dto.UserElevateRequestDto;
 import com.gamepan.gameboard.domain.user.dto.UserResponseDto;
 import com.gamepan.gameboard.domain.user.dto.UserUpdateRequestDto;
 import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.service.UserService;
+import com.gamepan.gameboard.global.api.ApiResponse;
+import com.gamepan.gameboard.global.security.CustomUserDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,5 +64,15 @@ public class UserRestController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    // 일반 유저에서 인증 코드를 통한 관리자 승급
+    // fixme: 초대 코드로 현재 권한을 받으면 즉시 권한이 부여되는게 아니라 재로그인시 권한이 부여됨.
+    @PostMapping("/invite")
+    public ResponseEntity<ApiResponse<Void>> invite(@Valid @RequestBody UserElevateRequestDto dto,
+                                                    @AuthenticationPrincipal CustomUserDetails principal) {
+        userService.inviteToAdmin(principal.getUser().getId(), dto.getInviteCode());
+        return ResponseEntity.ok(ApiResponse.ok(null, "관리자로 승격되었습니다."));
+    }
+
 }
 
