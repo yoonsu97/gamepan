@@ -1,5 +1,6 @@
 package com.gamepan.gameboard.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -8,5 +9,11 @@ public class LoginController {
     @GetMapping("/login")
     public String loginPage() {
         return "auth/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login?logout";
     }
 }
