@@ -60,6 +60,7 @@ public class PostService {
     }
 
     // 상세조회
+    @Transactional
     public Post getPost(Long id) {
         // 아이디로 게시글 조회, 없으면 예외
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
@@ -68,11 +69,15 @@ public class PostService {
         if (post.isDeleted() || post.getBoard().isDeleted()) {
             throw new IllegalStateException("삭제된 게시글은 조회할 수 없습니다.");
         }
-
         post.setViewCount(post.getViewCount() + 1);
         postRepository.save(post);
 
         return post;
+    }
+
+    // 최근 생성 게시물을 limit만큼 가져오기
+    public List<Post> getRecentPostsByBoard(Long boardId) {
+        return postRepository.findTop10ByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(boardId);
     }
 
     // 게시글 수정
@@ -108,15 +113,6 @@ public class PostService {
 
 
         post.softDelete(); // BaseEntity의 softDelete() 메서드 호출
-        postRepository.save(post);
-    }
-
-    // [웹용] Soft Delete (권한 검사 없이 단순 삭제)
-    public void softDeletePost(Long postId) {
-        Post post = postRepository.findByIdAndIsDeletedFalse(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
-
-        post.softDelete();
         postRepository.save(post);
     }
 

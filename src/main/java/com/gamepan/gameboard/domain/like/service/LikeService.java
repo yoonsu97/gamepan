@@ -7,6 +7,7 @@ import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,20 +29,29 @@ public class LikeService {
 
         boolean liked;
         if (existing.isPresent()) {
-            // 이미 좋아요 → 취소
-            likeRepository.delete(existing.get());
+            // 좋아요 취소
+            likeRepository.deleteByPost_IdAndUser_Id(postId, user.getId());
+            postRepository.decrementLikeCount(postId);
             liked = false;
+
+            // 화면 일관성용 필드 보정(선택)
+            post.setLikeCount(Math.max(0, post.getLikeCount() - 1));
         } else {
-            // 아직 안 눌렀음 → 추가
-            likeRepository.save(Like.builder().post(post).user(user).build());
-            liked = true;
+            try {
+                likeRepository.save(Like.builder().post(post).user(user).build());
+                postRepository.incrementLikeCount(postId);
+                liked = true;
+
+                // 화면 일관성용 필드 보정(선택)
+                post.setLikeCount(post.getLikeCount() + 1);
+            } catch (DataIntegrityViolationException e) {
+                // 동시성으로 인해 이미 다른 트랜잭션이 저장했을 수 있음
+                liked = true;
+            }
         }
 
-        long cnt = likeRepository.countByPost_Id(postId);
-        post.setLikeCount((int) cnt);
-
-        return new ToggleResult(liked, cnt);
+        return new ToggleResult(liked, post.getLikeCount());
     }
 
-    public record ToggleResult(boolean liked, long likeCount) {}
+        public record ToggleResult(boolean liked, long likeCount) {}
 }
