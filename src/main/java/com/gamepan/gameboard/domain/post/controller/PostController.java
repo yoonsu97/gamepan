@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.domain.post.controller;
 
 import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
 import com.gamepan.gameboard.domain.post.dto.PostResponseDto;

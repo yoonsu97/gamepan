@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.domain.user.controller;
 
 import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
 import com.gamepan.gameboard.domain.user.dto.UserElevateRequestDto;

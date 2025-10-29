@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.domain.board.controller;
 
 import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
 import com.gamepan.gameboard.domain.board.dto.BoardResponseDto;
@@ -8,11 +8,12 @@ import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/boards")
 //@RequestMapping("/api/admin/boards")
@@ -20,6 +21,12 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    /*
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute
+    }
+    */
     // 게시판 생성(관리자 기능) - POST /boards
     @PostMapping
     public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto dto) {
@@ -29,7 +36,7 @@ public class BoardController {
     // 게시판 목록  보기- GET /boards
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
-        List<BoardResponseDto> boards = boardService.getAllBoards()
+        List<BoardResponseDto> boards = boardService.getAllActiveBoards()
                 .stream()
                 .map(BoardResponseDto::from)
                 .toList();

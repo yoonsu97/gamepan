@@ -36,8 +36,8 @@ public class BoardService {
     }
 
     // 게시판 전체조회
-    public List<Board> getAllBoards() {
-        return boardRepository.findAll();
+    public List<Board> getAllActiveBoards() {
+        return boardRepository.findAllByIsDeletedFalse();
     }
 
     // 게시판 단건 조회
