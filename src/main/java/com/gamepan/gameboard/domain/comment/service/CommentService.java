@@ -39,7 +39,12 @@ public class CommentService {
                 .content(dto.getContent())
                 .build();
 
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+
+        post.increaseCommentCount();
+        postRepository.save(post);
+
+        return savedComment;
     }
 
     // 전체 댓글 조회
@@ -82,6 +87,9 @@ public class CommentService {
         if (post.isDeleted()) {
             throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
         }
+
+        post.decreaseCommentCount();
+        postRepository.save(post);
 
         commentRepository.delete(comment);
     }

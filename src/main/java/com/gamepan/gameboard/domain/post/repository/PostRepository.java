@@ -1,7 +1,6 @@
 package com.gamepan.gameboard.domain.post.repository;
 
 import com.gamepan.gameboard.domain.post.entity.Post;
-import com.gamepan.gameboard.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
