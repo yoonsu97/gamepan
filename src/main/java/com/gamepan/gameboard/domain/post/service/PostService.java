@@ -69,6 +69,9 @@ public class PostService {
             throw new IllegalStateException("삭제된 게시글은 조회할 수 없습니다.");
         }
 
+        post.setViewCount(post.getViewCount() + 1);
+        postRepository.save(post);
+
         return post;
     }
 
@@ -105,6 +108,15 @@ public class PostService {
 
 
         post.softDelete(); // BaseEntity의 softDelete() 메서드 호출
+        postRepository.save(post);
+    }
+
+    // [웹용] Soft Delete (권한 검사 없이 단순 삭제)
+    public void softDeletePost(Long postId) {
+        Post post = postRepository.findByIdAndIsDeletedFalse(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+
+        post.softDelete();
         postRepository.save(post);
     }
 
