@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.domain.comment.controller;
 
 import com.gamepan.gameboard.domain.comment.dto.CommentRequestDto;
 import com.gamepan.gameboard.domain.comment.dto.CommentResponseDto;

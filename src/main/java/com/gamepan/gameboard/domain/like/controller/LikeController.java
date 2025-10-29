@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.domain.like.controller;
 
 import com.gamepan.gameboard.domain.like.service.LikeService;
 import com.gamepan.gameboard.domain.user.entity.User;
