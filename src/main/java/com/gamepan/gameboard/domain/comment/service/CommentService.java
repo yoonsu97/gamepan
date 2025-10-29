@@ -41,8 +41,8 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(comment);
 
-        post.increaseCommentCount();
-        postRepository.save(post);
+        postRepository.incrementCommentCount(postId);
+        post.setCommentCount(post.getCommentCount() + 1);
 
         return savedComment;
     }
@@ -88,8 +88,8 @@ public class CommentService {
             throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
         }
 
-        post.decreaseCommentCount();
-        postRepository.save(post);
+        postRepository.decrementCommentCount(post.getId());
+        post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
 
         commentRepository.delete(comment);
     }

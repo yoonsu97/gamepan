@@ -60,6 +60,7 @@ public class PostService {
     }
 
     // 상세조회
+    @Transactional
     public Post getPost(Long id) {
         // 아이디로 게시글 조회, 없으면 예외
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
@@ -68,8 +69,15 @@ public class PostService {
         if (post.isDeleted() || post.getBoard().isDeleted()) {
             throw new IllegalStateException("삭제된 게시글은 조회할 수 없습니다.");
         }
+        postRepository.incrementViewCount(id);
+        post.setViewCount(post.getViewCount() + 1);
 
         return post;
+    }
+
+    // 최근 생성 게시물을 limit만큼 가져오기
+    public List<Post> getRecentPostsByBoard(Long boardId) {
+        return postRepository.findTop10ByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(boardId);
     }
 
     // 게시글 수정

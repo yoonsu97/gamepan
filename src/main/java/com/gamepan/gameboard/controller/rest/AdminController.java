@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.controller.rest;
 
 import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
 import com.gamepan.gameboard.domain.board.dto.BoardResponseDto;

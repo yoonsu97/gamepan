@@ -1,4 +1,4 @@
-package com.gamepan.gameboard.controller;
+package com.gamepan.gameboard.controller.web;
 
 import com.gamepan.gameboard.domain.user.dto.SignupRequestDto;
 import com.gamepan.gameboard.domain.user.entity.Role;
