@@ -60,7 +60,7 @@ public class Post extends BaseEntity {
         this.isDeleted = false;
     }
 
-    // 댓글 수 증가
+    //댓글 수 증가
     public void increaseCommentCount() {
         this.commentCount++;
     }

@@ -23,14 +23,14 @@ public class CommentService {
 
     //댓글 생성
     public Comment createComment(Long postId,Long currentUserId,CommentRequestDto dto) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdAndIsDeletedFalse(postId)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
 
         if (post.isDeleted()) {
             throw new IllegalStateException("삭제된 게시글에는 댓글을 작성할 수 없습니다.");
         }
 
-        User user = userRepository.findById(currentUserId)
+        User user = userRepository.findByIdAndIsDeletedFalse(currentUserId)
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         Comment comment = Comment.builder()
@@ -39,7 +39,6 @@ public class CommentService {
                 .content(dto.getContent())
                 .build();
 
-        // 댓글 수 증가
         Comment savedComment = commentRepository.save(comment);
 
         post.increaseCommentCount();
@@ -48,9 +47,14 @@ public class CommentService {
         return savedComment;
     }
 
+    // 전체 댓글 조회
+    public List<Comment> getAllComments() {
+        return commentRepository.findAll();
+    }
+
     // 게시글별 댓글 조회
     public List<Comment> getCommentsByPost(Long postId) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdAndIsDeletedFalse(postId)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
 
         if (post.isDeleted()) {
@@ -84,8 +88,6 @@ public class CommentService {
             throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
         }
 
-
-        //댓글 수 감소
         post.decreaseCommentCount();
         postRepository.save(post);
 

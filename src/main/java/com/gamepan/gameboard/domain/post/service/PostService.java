@@ -27,10 +27,10 @@ public class PostService {
 
     // 게시글 생성 메서드
     public Post createPost(Long boardId, Long userId, PostRequestDto dto) {
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시판을 찾을 수 없습니다."));
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
 
         Post post = Post.builder()
@@ -43,10 +43,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    //전체 게시글 조회(삭제 포함, admin에서 사용)
+    public List<Post> getAllActivePosts() {
+        return postRepository.findAllByIsDeletedFalse();
+    }
 
     // 게시판 내에 전체 게시글 조회
     public List<Post> getAllPosts(Long boardId) {
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new RuntimeException("게시판 없음"));
 
         if (board.isDeleted()) {
@@ -58,7 +62,7 @@ public class PostService {
     // 상세조회
     public Post getPost(Long id) {
         // 아이디로 게시글 조회, 없으면 예외
-        Post post = postRepository.findById(id)
+        Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
 
         if (post.isDeleted() || post.getBoard().isDeleted()) {
@@ -71,14 +75,14 @@ public class PostService {
     // 게시글 수정
     public Post updatePost(Long id, Long currentUserId,PostRequestDto dto) {
         // 기존 기시글 찾기. 없으면 예외
-        Post post = postRepository.findById(id)
+        Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "수정 할 게시글이 없습니다."));
 
         if (post.isDeleted() || post.getBoard().isDeleted()) {
             throw new IllegalStateException("삭제된 게시글은 수정할 수 없습니다.");
         }
 
-        if(!post.getUser().getId().equals(currentUserId) || !post.getUser().getRole().equals(Role.ADMIN)){
+        if(!post.getUser().getId().equals(currentUserId) && !post.getUser().getRole().equals(Role.ADMIN)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
         }
 
@@ -92,10 +96,10 @@ public class PostService {
 
     //  게시글 삭제 (Soft Delete 적용)
     public void softDeletePost(Long id, Long currentUserId) {
-        Post post = postRepository.findById(id)
+        Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 할 게시글이 없습니다."));
 
-        if(!post.getUser().getId().equals(currentUserId) || !post.getUser().getRole().equals(Role.ADMIN)){
+        if(!post.getUser().getId().equals(currentUserId) && !post.getUser().getRole().equals(Role.ADMIN)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다.");
         }
 

@@ -30,7 +30,7 @@ public class PostController {
     }
 
 
-    // 전체 조회
+    // 게시판 안에 게시물 전체 조회
     @GetMapping("/boards/{boardId}/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(@PathVariable Long boardId) {
         List<PostResponseDto> posts = postService.getAllPosts(boardId)
