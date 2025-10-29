@@ -9,6 +9,8 @@ import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,6 +64,12 @@ public class CommentService {
         }
 
         return commentRepository.findAllByPostId(postId);
+    }
+
+    // 내가 댓글 단 게시글 조회
+    @Transactional
+    public Page<Post> findCommentedPostsByUser(Long userId, Pageable pageable) {
+        return commentRepository.findCommentedPostsByUser(userId, pageable);
     }
 
     // 댓글 수정

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 관리</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/mypage-profile.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+<main class="wrap">
+    <h2>회원 정보 관리</h2>
+
+    <div th:if="${param.updated}" class="alert"
+         th:text="${param.updated[0] == 'nickname'} ? '닉네임이 변경되었습니다.' : '비밀번호가 변경되었습니다.'">
+        업데이트 됨
+    </div>
+
+    <div class="card">
+        <h3>닉네임 변경</h3>
+        <form th:action="@{/mypage/profile/nickname}" method="post">
+            <div class="row">
+                <input type="text" name="nickname" th:placeholder="${currentUser.nickname}" required>
+                <button class="btn" type="submit">변경</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>비밀번호 변경</h3>
+        <form th:action="@{/mypage/profile/password}" method="post">
+            <div class="row" style="margin-bottom:8px;">
+                <input type="password" name="currentPassword" placeholder="현재 비밀번호" required>
+            </div>
+            <div class="row">
+                <input type="password" name="newPassword" placeholder="새 비밀번호" required>
+                <button class="btn" type="submit">변경</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

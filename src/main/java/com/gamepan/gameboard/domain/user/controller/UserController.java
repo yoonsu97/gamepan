@@ -50,13 +50,13 @@ public class UserController {
     }*/
 
     /** ✅ 사용자 수정 (PUT /api/users/{id}) */
-    @PutMapping("/{id}")
+    /*@PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
             @RequestBody UserUpdateRequestDto request) {
         User updated = userService.updateUser(id, request);
         return ResponseEntity.ok(UserResponseDto.from(updated));
-    }
+    }*/
 
     /** ✅ 사용자 삭제 (DELETE /api/users/{id}) */
     @DeleteMapping("/{id}")

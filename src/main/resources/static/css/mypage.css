@@ -1,0 +1,89 @@
+.page {
+    max-width: 1120px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+/* 프로필 영역 */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 24px 0;
+}
+
+
+.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #eee;
+}
+
+.profile-info { min-width: 0; }  /* 긴 닉네임 줄바꿈 대응 */
+.profile-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;               /* 좁을 때 자동 줄바꿈 */
+}
+
+.nickname { margin: 0; font-size: 24px; font-weight: 700; }
+
+/* 탭 메뉴 */
+.tabs {
+    display: flex;
+    gap: 16px;
+    border-bottom: 1px solid #eee;
+    margin-top: 16px;
+}
+
+.tab {
+    padding: 10px 6px;
+    text-decoration: none;
+    color: #666;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.tab:hover {
+    color: #0aa56b;
+}
+
+.tab.active {
+    color: #0aa56b;
+    border-color: #0aa56b;
+    font-weight: 700;
+}
+
+/* 테이블 영역 (작성글 목록 등) */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+th,
+td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+}
+
+th {
+    background: #fafafa;
+    font-weight: 600;
+}
+
+.right {
+    text-align: right;
+}
+
+/* 하단 버튼 영역 */
+.footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}

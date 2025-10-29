@@ -41,9 +41,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable()) // CSRF - 사이트 간 요청 위조
 
 
-
                 .authorizeHttpRequests(auth -> auth     // 각 경로 접근 권한 지정
-                        .requestMatchers("/","/login", "/signup","/css/**",
+                        .requestMatchers("/login", "/signup","/gamepan","/css/**",
                                 "/js/**","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 누구나 접근 가능
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")                    // /admin은 ADMIN 권한 만 접근 가능
                         .requestMatchers("/api/**").authenticated()                           // 나머지는 로그인 시 접근 가능
@@ -53,14 +52,14 @@ public class SecurityConfiguration {
                 .formLogin(form -> form                 // 로그인 설정
                         .loginPage("/login")                                       // 사용자 정의 로그인 페이지 경로
                         .loginProcessingUrl("/login")                                // 로그인 요청을 처리할 URL
-                        .defaultSuccessUrl("/", true)         // 로그인 성공시 리다이렉트 될 페이지
+                        .defaultSuccessUrl("/gamepan", true)         // 로그인 성공시 리다이렉트 될 페이지
                         .failureUrl("/login?error=true")          // 로그인 실패시 이동할 페이지
                         .permitAll()                                                 // 로그인 페이지는 비로그인 사용자도 접근 가능
                 )
 
                 .logout(logout -> logout                    // 로그아웃 설정
                         .logoutUrl("/logout")                                       // 사용자 정의 로그아웃 페이지 경로
-                        .logoutSuccessUrl("/login?logout=true")                     // 로그아웃 성공시 리다이렉트
+                        .logoutSuccessUrl("/gamepan?logout=true")                     // 로그아웃 성공시 리다이렉트
                         .invalidateHttpSession(true)                                  // 세션 무효화
                         .deleteCookies("JSESSIONID")                // JSESSIONID 쿠키 삭제
                 );
