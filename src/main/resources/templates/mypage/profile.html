@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 관리</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/mypage-profile.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+<main class="wrap">
+    <h2>회원 정보 관리</h2>
+
+    <div th:if="${param.updated}" class="alert"
+         th:text="${param.updated[0] == 'nickname'} ? '닉네임이 변경되었습니다.' : '비밀번호가 변경되었습니다.'">
+        업데이트 됨
+    </div>
+
+    <div class="card">
+        <h3>닉네임 변경</h3>
+        <form th:action="@{/mypage/profile/nickname}" method="post">
+            <div class="row">
+                <input type="text" name="nickname" th:placeholder="${currentUser.nickname}" required>
+                <button class="btn" type="submit">변경</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>비밀번호 변경</h3>
+        <form th:action="@{/mypage/profile/password}"
+              th:object="${passwordForm}"
+              method="post"
+              class="row" style="flex-direction:column; gap:8px; max-width:420px;">
+
+            <input type="password" th:field="*{currentPassword}" placeholder="현재 비밀번호" required>
+            <div class="alert" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}">현재 비밀번호 오류</div>
+
+            <input type="password" th:field="*{newPassword}" placeholder="새 비밀번호" required>
+            <div class="alert" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}">새 비밀번호 오류</div>
+
+            <input type="password" th:field="*{passwordConfirm}" placeholder="새 비밀번호 확인" required>
+            <div class="alert" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">확인 오류</div>
+
+            <button class="btn" type="submit">변경</button>
+
+            <div class="alert" th:if="${updated == 'password'}">비밀번호가 변경되었습니다.</div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

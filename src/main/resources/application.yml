@@ -9,5 +9,6 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true      # 실행되는 SQL 출력
+        format_sql: true    # SQL 포맷 정렬 (가독성 향상)
+        highlight_sql: true # 콘솔에 색상 하이라이트 표시 (Spring Boot 3.2+)

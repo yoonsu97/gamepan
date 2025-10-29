@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+<main class="page">
+    <h2>마이페이지</h2>
+
+    <div class="profile">
+        <div class="avatar"></div>
+
+        <div class="profile-info">
+            <div class="profile-row">
+                <h2 class="nickname" th:text="${currentUser.nickname}">elice1</h2>
+                <a class="btn btn-sm" th:href="@{/mypage/profile}">회원 정보 관리</a>
+            </div>
+            <!-- 필요하면 보조 정보 -->
+            <!-- <div class="profile-sub">작성글 7</div> -->
+        </div>
+    </div>
+
+    <!-- 탭 -->
+    <div class="tabs">
+        <a class="tab" th:classappend="${activeTab=='posts'} ? ' active'"    th:href="@{/mypage(tab='posts')}">작성글</a>
+        <a class="tab" th:classappend="${activeTab=='comments'} ? ' active'" th:href="@{/mypage(tab='comments')}">작성댓글</a>
+        <a class="tab" th:classappend="${activeTab=='likes'} ? ' active'"    th:href="@{/mypage(tab='likes')}">좋아요한 글</a>
+    </div>
+
+    <!-- 작성글 -->
+    <section th:if="${activeTab=='posts'}">
+        <table>
+            <thead>
+            <tr><th>제목</th><th>작성일</th><th class="right">조회</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${posts}">
+                <td>
+                    <a th:href="@{'/posts/' + ${p.id}}" th:text="${p.title}">제목</a>
+                </td>
+                <td th:text="${#temporals.format(p.createdAt,'yyyy.MM.dd')}">2025.01.01</td>
+                <td class="right" th:text="${p.viewCount}">0</td>
+            </tr>
+            <tr th:if="${posts == null or #lists.isEmpty(posts.content)}">
+                <td colspan="3">작성한 글이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 작성댓글 탭 -->
+    <section th:if="${activeTab=='comments'}">
+        <table>
+            <thead>
+            <tr><th>게시글 제목</th><th>작성자</th><th>작성일</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${commentedPosts}">
+                <td><a th:href="@{'/posts/' + ${p.id}}" th:text="${p.title}">게시글 제목</a></td>
+                <td th:text="${p.user.nickname}">작성자</td>
+                <td th:text="${#temporals.format(p.createdAt, 'yyyy.MM.dd')}">2025.01.01</td>
+            </tr>
+            <tr th:if="${commentedPosts == null or #lists.isEmpty(commentedPosts.content)}">
+                <td colspan="3">댓글을 단 게시글이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 좋아요한 글 -->
+    <section th:if="${activeTab=='likes'}">
+        <table>
+            <thead>
+            <tr><th>제목</th><th>작성자</th><th>작성일</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${likedPosts}">
+                <td><a th:href="@{'/posts/' + ${p.id}}" th:text="${p.title}">제목</a></td>
+                <td th:text="${p.user.nickname}">작성자</td>
+                <td th:text="${#temporals.format(p.createdAt,'yyyy.MM.dd')}">2025.01.01</td>
+            </tr>
+            <tr th:if="${likedPosts == null or #lists.isEmpty(likedPosts.content)}">
+                <td colspan="3">좋아요한 글이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 하단 글쓰기 버튼 -->
+    <div class="footer-actions">
+        <!-- 보드를 하나로 고정하지 않았다면 글쓰기 폼에서 보드 선택 -->
+        <a class="btn" th:href="@{/posts/new}">글쓰기</a>
+        <!-- 특정 보드로 바로 보내려면: th:href="@{'/boards/' + ${someBoardId} + '/posts/new'}" -->
+    </div>
+</main>
+</body>
+</html>

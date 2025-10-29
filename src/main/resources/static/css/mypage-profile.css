@@ -1,0 +1,34 @@
+.wrap {
+    max-width: 720px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+
+.card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: #fff;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.row input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* 버튼은 공통 mainLayout.css의 .btn 사용 — 여기선 정의하지 않음 */
+
+/* 성공/알림 메시지 */
+.alert {
+    color: #0aa56b;
+    margin-bottom: 8px;
+}

@@ -8,6 +8,8 @@ import com.gamepan.gameboard.domain.user.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +21,12 @@ import static org.springframework.http.HttpStatus.*;
 public class LikeService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
+
+    // 내가 좋아요 한 게시글 페이지네이션
+    @Transactional
+    public Page<Post> findLikedPostsPage(Long userId, Pageable pageable) {
+        return likeRepository.findLikedPosts(userId, pageable);
+    }
 
     @Transactional
     public ToggleResult toggleLike(Long postId, User user) {
@@ -53,5 +61,5 @@ public class LikeService {
         return new ToggleResult(liked, post.getLikeCount());
     }
 
-        public record ToggleResult(boolean liked, long likeCount) {}
+    public record ToggleResult(boolean liked, long likeCount) {}
 }

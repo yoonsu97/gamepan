@@ -62,7 +62,7 @@ public class UserService {
     }
 
     //Update - 사용자 정보 바꾸기(password, nickname 변경)
-    public User updateUser(Long id, UserUpdateRequestDto dto) {
+    /*public User updateUser(Long id, UserUpdateRequestDto dto) {
         User user = getUserById(id);
         // 입력된 비밀번호가 있을 때 비밀번호를 수정
         if(dto.getPassword() != null ){
@@ -74,6 +74,30 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }*/
+
+    // 닉네임 변경
+    @Transactional
+    public void updateNickname(Long userId, String nickname) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "회원이 존재하지 않습니다."));
+
+        user.updateNickname(nickname); // 엔티티에 세터대신 도메인 메서드 권장
+        // 영속 상태이므로 flush 시점에 자동 업데이트
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void updatePassword(Long userId, String currentPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "회원이 존재하지 않습니다."));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new ResponseStatusException(UNAUTHORIZED, "현재 비밀번호가 올바르지 않습니다.");
+        }
+
+        // 비밀번호 정책 검증(길이/문자조합 등) 필요 시 추가
+        user.updatePassword(passwordEncoder.encode(newPassword));
     }
 
     //  삭제 (Soft Delete 적용)

@@ -1,0 +1,53 @@
+<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>gamepan</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<main class="container">
+    <section class="section" th:if="${#lists.isEmpty(boards)}">
+        아직 생성된 게시판이 없습니다.
+    </section>
+
+    <section class="section" th:each="board : ${boards}" th:if="${!#lists.isEmpty(boards)}">
+        <div class="board">
+            <div class="board-header">
+                <div class="board-title" th:text="${board.name}">게시판 이름</div>
+                <a class="more" th:href="@{'/boards/' + ${board.id}}">더보기 ▸</a>
+            </div>
+
+            <div class="grid">
+                <!-- 게시판별 최신 글 -->
+                <div class="card"
+                     th:each="post : ${postsByBoard[board.id]}"
+                     th:if="${postsByBoard[board.id]} != null">
+                    <a th:href="@{'/posts/' + ${post.id}}">
+                        <h4 class="title" th:text="${post.title}">게시글 제목</h4>
+                    </a>
+                    <div class="meta">
+                        <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd HH:mm')}">날짜</span>
+                        <span th:text="'조회 ' + ${post.viewCount}">조회수</span>
+                        <span th:text="'좋아요 ' + ${post.likeCount}">좋아요</span>
+                    </div>
+                </div>
+
+                <!-- 글이 없을 때 -->
+                <div class="card"
+                     th:each="post : ${postsByBoard[board.id]}"
+                     th:if="${postsByBoard[board.id] != null}">
+                    <div>아직 등록된 글이 없습니다.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

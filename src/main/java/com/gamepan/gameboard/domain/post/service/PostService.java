@@ -10,6 +10,8 @@ import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,6 +50,13 @@ public class PostService {
         return postRepository.findAllByIsDeletedFalse();
     }
 
+    // 내 작성글 페이지네이션
+    @Transactional
+    public Page<Post> findPageByAuthor(Long userId, Pageable pageable) {
+        return postRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId, pageable);
+
+    }
+
     // 게시판 내에 전체 게시글 조회
     public List<Post> getAllPosts(Long boardId) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
@@ -69,13 +78,13 @@ public class PostService {
         if (post.isDeleted() || post.getBoard().isDeleted()) {
             throw new IllegalStateException("삭제된 게시글은 조회할 수 없습니다.");
         }
+        postRepository.incrementViewCount(id);
         post.setViewCount(post.getViewCount() + 1);
-        postRepository.save(post);
 
         return post;
     }
 
-    // 최근 생성 게시물을 limit만큼 가져오기
+    // 최근 생성 게시물을 10개 가져오기
     public List<Post> getRecentPostsByBoard(Long boardId) {
         return postRepository.findTop10ByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(boardId);
     }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<nav class="header" th:fragment="siteHeader">
+    <div class="container nav">
+
+        <!-- 좌측: 로고 / 프로젝트명 -->
+        <a class="brand" th:href="@{/gamepan}">GamePan</a>
+
+        <!-- 우측: 로그인 상태별 메뉴 -->
+        <div class="nav-right">
+
+            <!-- ✅ 로그인 상태 -->
+            <div sec:authorize="isAuthenticated()">
+                <span th:text="${#authentication?.principal?.user?.nickname != null ?
+                                #authentication.principal.user.nickname + '님' :
+                                #authentication?.name + '님'}">
+                    user님
+                </span>
+
+                <a class="btn" th:href="@{/gamepan}">홈</a>
+                <a class="btn" th:href="@{/mypage}">마이페이지</a>
+
+                <form th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn">로그아웃</button>
+                </form>
+            </div>
+
+            <!-- ✅ 비로그인 상태 -->
+            <div sec:authorize="!isAuthenticated()">
+                <a class="btn" th:href="@{/gamepan}">홈</a>
+                <a class="btn" th:href="@{/login}">로그인</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</html>
