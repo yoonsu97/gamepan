@@ -21,7 +21,7 @@ public class LikeService {
 
     @Transactional
     public ToggleResult toggleLike(Long postId, User user) {
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findByIdAndIsDeletedFalse(postId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "게시글을 찾을 수 없습니다."));
 
         var existing = likeRepository.findByPost_IdAndUser_Id(postId, user.getId());

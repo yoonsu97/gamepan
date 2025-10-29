@@ -10,6 +10,7 @@ import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -51,13 +52,13 @@ public class UserService {
 
     //Read - 사용자 1명 가져오기
     public User getUserById(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
     }
 
     //Read - 사용자 모두 가져오기
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllByIsDeletedFalse();
     }
 
     //Update - 사용자 정보 바꾸기(password, nickname 변경)
@@ -77,7 +78,7 @@ public class UserService {
 
     //  삭제 (Soft Delete 적용)
     public void softDeleteUser(Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new IllegalArgumentException("삭제할 사용자가 존재하지 않습니다."));
 
         user.softDelete(); // BaseEntity의 softDelete() 메서드 호출
@@ -123,7 +124,7 @@ public class UserService {
         }
 
         // 3) 유저 조회 및 승격
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         user.setAdmin(); // 내부에서 role = ADMIN 으로 세팅되는 메서드

@@ -42,12 +42,12 @@ public class UserController {
         return ResponseEntity.ok(UserResponseDto.from(user));
     }
 
-    /** ✅ 사용자 등록 (POST /api/users) */
+    /** ✅ 사용자 등록 (POST /api/users) *//*
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateRequestDto request) {
         User user = userService.createUser(request, Role.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDto.from(user));
-    }
+    }*/
 
     /** ✅ 사용자 수정 (PUT /api/users/{id}) */
     @PutMapping("/{id}")
@@ -65,7 +65,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // ✅ 게시글 복구
+    // ✅ 사용자 복구
     @PutMapping("/{id}/restore")
     public ResponseEntity<String> restoreUser(@PathVariable Long id) {
         userService.restoreUser(id);
