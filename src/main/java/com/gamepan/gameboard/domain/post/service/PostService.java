@@ -57,7 +57,7 @@ public class PostService {
 
     }
 
-    // 게시판 내에 전체 게시글 조회
+    // 특정 게시판 게시글
     public List<Post> getAllPosts(Long boardId) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new RuntimeException("게시판 없음"));
@@ -65,7 +65,7 @@ public class PostService {
         if (board.isDeleted()) {
             throw new IllegalStateException("삭제된 게시판의 게시글은 조회할 수 없습니다.");
         }
-        return postRepository.findAllByBoardIdAndIsDeletedFalse(boardId);
+        return postRepository.findAllByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(boardId);
     }
 
     // 상세조회

@@ -19,8 +19,6 @@ import java.util.List;
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @SQLDelete(sql = "UPDATE board SET is_deleted = true WHERE id = ?")
-// 조회할 때 “deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
-/*@Where(clause = "is_deleted = false")*/
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +40,12 @@ public class Board extends BaseEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
+
+    // ===== 연관관계 편의 메서드 =====
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setBoard(this);
+    }
 
     // 게시판 삭제 시 게시글도 Soft Delete
     public void softDelete() {

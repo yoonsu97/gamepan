@@ -73,22 +73,22 @@ public class CommentService {
     }
 
     // 댓글 수정
-    public Comment updateComment(Long id ,CommentRequestDto dto) {
+    public Comment updateComment(Long id, Long currentUserId, CommentRequestDto dto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        Post post = comment.getPost();
-        if (post.isDeleted()) {
-            throw new IllegalStateException("삭제된 게시글의 댓글은 수정할 수 없습니다.");
+        if (!comment.getUser().getId().equals(currentUserId)) {
+            throw new IllegalStateException("본인 댓글만 수정할 수 있습니다.");
         }
 
         comment.setContent(dto.getContent());
         return commentRepository.save(comment);
     }
 
-    // 댓글 삭제
-    public void deleteComment(long id) {
-        Comment comment = commentRepository.findById(id)
+
+    // 댓글 삭제 (작성자 또는 관리자 가능)
+    public void deleteComment(Long commentId, Long currentUserId) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
         Post post = comment.getPost();
@@ -96,6 +96,32 @@ public class CommentService {
             throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
         }
 
+        // 🔹 사용자 정보 조회
+        User user = userRepository.findByIdAndIsDeletedFalse(currentUserId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        boolean isOwner = comment.getUser().getId().equals(currentUserId);
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+
+        if (!isOwner && !isAdmin) {
+            throw new IllegalStateException("삭제 권한이 없습니다.");
+        }
+
+        postRepository.decrementCommentCount(post.getId());
+        post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
+        commentRepository.delete(comment);
+    }
+
+    //  관리자 전용
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
+
+        Post post = comment.getPost();
+        if (post.isDeleted()) {
+            throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
+        }
+        //  댓글 삭제 + 카운트 감소
         postRepository.decrementCommentCount(post.getId());
         post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
 

@@ -16,20 +16,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/posts/web")
+@RequestMapping("/boards/{boardId}/posts")
 public class PostWebController {
 
-    private final BoardService boardService;
     private final PostService postService;
     private final CommentService commentService;
+    private final BoardService boardService;
 
 
     // 게시글 등록 폼
-    @GetMapping("/boards/{boardId}/posts/create")
+    @GetMapping("/create")
     public String showCreateForm(@PathVariable Long boardId, Model model) {
         model.addAttribute("board", boardService.getBoard(boardId));
         model.addAttribute("postRequestDto", new PostRequestDto());
@@ -37,7 +36,7 @@ public class PostWebController {
     }
 
     //게시글 등록
-    @PostMapping("/boards/{boardId}/posts")
+    @PostMapping
     public String createPost(@PathVariable Long boardId,
                              @AuthenticationPrincipal CustomUserDetails principal,
                              @ModelAttribute PostRequestDto dto) {
@@ -48,12 +47,12 @@ public class PostWebController {
         Long userId = principal.getUser().getId();
         postService.createPost(boardId, userId, dto);
 
-        return "redirect:/posts/web/boards/" + boardId + "/posts";
+        return "redirect:/boards/" + boardId + "/posts";
     }
 
 
     // 게시글 조회
-    @GetMapping("/boards/{boardId}/posts")
+    @GetMapping
     public String getAllPosts(@PathVariable Long boardId, Model model) {
         model.addAttribute("board", boardService.getBoard(boardId));
         model.addAttribute("posts", postService.getAllPosts(boardId));
@@ -61,7 +60,7 @@ public class PostWebController {
     }
 
     // 상세 조회
-    @GetMapping("/boards/{boardId}/posts/{postId}")
+    @GetMapping("/{postId}")
     public String getPostDetail(@PathVariable Long boardId,
                                 @PathVariable Long postId,
                                 Model model) {
@@ -73,7 +72,7 @@ public class PostWebController {
 
 
     // 수정 폼
-    @GetMapping("/boards/{boardId}/posts/{postId}/edit")
+    @GetMapping("/{postId}/edit")
     public String showEditForm(@PathVariable Long boardId,
                                @PathVariable Long postId,
                                Model model) {
@@ -88,7 +87,7 @@ public class PostWebController {
     }
 
     // 수정
-    @PostMapping("/boards/{boardId}/posts/{postId}/edit")
+    @PostMapping("/{postId}/edit")
     public String updatePost(@PathVariable Long boardId,
                              @PathVariable Long postId,
                              @AuthenticationPrincipal CustomUserDetails principal,
@@ -100,12 +99,12 @@ public class PostWebController {
         Long currentUserId = principal.getUser().getId();
         postService.updatePost(postId, currentUserId, dto);
 
-        return "redirect:/posts/web/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId;
     }
 
 
     // 삭제
-    @PostMapping("/boards/{boardId}/posts/{postId}/delete")
+    @PostMapping("/{postId}/delete")
     public String deletePost(@PathVariable Long boardId,
                              @PathVariable Long postId,
                              @AuthenticationPrincipal CustomUserDetails principal) {
@@ -116,7 +115,7 @@ public class PostWebController {
         Long currentUserId = principal.getUser().getId();
         postService.softDeletePost(postId, currentUserId);
 
-        return "redirect:/posts/web/boards/" + boardId + "/posts";
+        return "redirect:/boards/" + boardId + "/posts";
     }
 
     /*
