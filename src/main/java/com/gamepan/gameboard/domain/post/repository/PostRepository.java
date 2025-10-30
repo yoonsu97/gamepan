@@ -12,11 +12,14 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 게시판 내 모든 게시글 조회 (Soft Delete 제외)
-    List<Post> findAllByBoardIdAndIsDeletedFalse(Long boardId);
+    //List<Post> findAllByBoardIdAndIsDeletedFalse(Long boardId);
     List<Post> findAllByIsDeletedFalse();
     Optional<Post> findByIdAndIsDeletedFalse(Long id);
     List<Post> findTop10ByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(Long boardId);
     Page<Post> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(Long userId, Pageable pageable);
+
+    // 내림차순 정렬
+    List<Post> findAllByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(Long boardId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Post p set p.viewCount = p.viewCount + 1 where p.id = :postId and p.isDeleted = false")
