@@ -40,7 +40,7 @@
             <tbody>
             <tr th:each="p : ${posts}">
                 <td>
-                    <a th:href="@{'/posts/' + ${p.id}}" th:text="${p.title}">제목</a>
+                    <a th:href="@{'/boards/' + ${p.board.id} + '/posts/' + ${p.id}}" th:text="${p.title}">게시글 제목</a>
                 </td>
                 <td th:text="${#temporals.format(p.createdAt,'yyyy.MM.dd')}">2025.01.01</td>
                 <td class="right" th:text="${p.viewCount}">0</td>
@@ -60,7 +60,9 @@
             </thead>
             <tbody>
             <tr th:each="p : ${commentedPosts}">
-                <td><a th:href="@{'/posts/' + ${p.id}}" th:text="${p.title}">게시글 제목</a></td>
+                <td>
+                    <a th:href="@{'/boards/' + ${p.board.id} + '/posts/' + ${p.id}}" th:text="${p.title}">게시글 제목</a>
+                </td>
                 <td th:text="${p.user.nickname}">작성자</td>
                 <td th:text="${#temporals.format(p.createdAt, 'yyyy.MM.dd')}">2025.01.01</td>
             </tr>
@@ -79,7 +81,9 @@
             </thead>
             <tbody>
             <tr th:each="p : ${likedPosts}">
-                <td><a th:href="@{'/posts/' + ${p.id}}" th:text="${p.title}">제목</a></td>
+                <td>
+                    <a th:href="@{'/boards/' + ${p.board.id} + '/posts/' + ${p.id}}" th:text="${p.title}">게시글 제목</a>
+                </td>
                 <td th:text="${p.user.nickname}">작성자</td>
                 <td th:text="${#temporals.format(p.createdAt,'yyyy.MM.dd')}">2025.01.01</td>
             </tr>

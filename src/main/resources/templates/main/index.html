@@ -22,7 +22,7 @@
         <div class="board">
             <div class="board-header">
                 <div class="board-title" th:text="${board.name}">게시판 이름</div>
-                <a class="more" th:href="@{'/boards/' + ${board.id}}">더보기 ▸</a>
+                <a class="more" th:href="@{'/boards/' + ${board.id}+'/posts'}">더보기 ▸</a>
             </div>
 
             <div class="grid">
