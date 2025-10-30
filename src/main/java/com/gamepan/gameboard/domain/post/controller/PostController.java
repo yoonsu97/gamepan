@@ -20,14 +20,14 @@ public class PostController {
     private final PostService postService;
 
     //게시글 등록
-    @PostMapping("/boards/{boardId}/posts")
-    public ResponseEntity<PostResponseDto> createPost(@PathVariable Long boardId,
+    /*@PostMapping("/boards/{boardId}/posts")
+    public ResponseEntity<PostResponseDto> createPost(
                                                       @AuthenticationPrincipal CustomUserDetails principal,
                                                       @RequestBody PostRequestDto dto) {
         Long userId = principal.getUser().getId(); // 현재 로그인한 사용자 ID
-        Post post = postService.createPost(boardId, userId, dto);
+        Post post = postService.createPost(userId, dto);
         return ResponseEntity.ok(PostResponseDto.from(post));
-    }
+    }*/
 
 
     // 게시글 조회
@@ -48,6 +48,7 @@ public class PostController {
     }
 
     // 수정
+    @PutMapping("/{id}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id,
                                                       @AuthenticationPrincipal CustomUserDetails principal,
                                                       @RequestBody PostRequestDto dto) {

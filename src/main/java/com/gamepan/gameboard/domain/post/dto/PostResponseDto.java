@@ -22,6 +22,7 @@ public class PostResponseDto { // 응답
     private int viewCount;
     private int likeCount;
     private int commentCount;
+    private LocalDateTime createdAt;
 
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
@@ -33,6 +34,7 @@ public class PostResponseDto { // 응답
                 .viewCount(post.getViewCount())
                 .likeCount(post.getLikeCount())
                 .commentCount(post.getCommentCount())
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 }

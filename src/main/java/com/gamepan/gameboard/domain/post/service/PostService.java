@@ -57,7 +57,7 @@ public class PostService {
 
     }
 
-    // 게시판 내에 전체 게시글 조회
+    // 특정 게시판 게시글
     public List<Post> getAllPosts(Long boardId) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new RuntimeException("게시판 없음"));

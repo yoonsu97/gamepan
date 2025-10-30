@@ -28,13 +28,16 @@
     <p class="text-muted" th:text="${board.description}">게시판 설명</p>
 </div>
 
-<!-- 🔹 글쓰기 버튼 -->
+<!-- 🔹 검색 + 글쓰기 버튼 -->
 <div class="container d-flex justify-content-between align-items-center mb-3">
-    <form class="d-flex w-50" th:action="@{|/posts/web/boards/${board.id}/posts|}" method="get">
+    <!-- 🔸 검색 폼 -->
+    <form class="d-flex w-50" th:action="@{|/boards/${board.id}/posts|}" method="get">
         <input class="form-control me-2" type="search" placeholder="검색어를 입력하세요" name="keyword">
         <button class="btn btn-outline-primary" type="submit">검색</button>
     </form>
-    <a class="btn btn-primary" th:href="@{|/posts/web/boards/${board.id}/posts/create|}">글쓰기</a>
+
+    <!-- 🔸 글쓰기 버튼 -->
+    <a class="btn btn-primary" th:href="@{|/boards/${board.id}/posts/create|}">글쓰기</a>
 </div>
 
 <!-- 🔹 게시글 목록 테이블 -->
@@ -54,16 +57,18 @@
         <tr th:each="post, stat : ${posts}">
             <td th:text="${stat.count}">1</td>
             <td class="text-start">
-                <a th:href="@{|/posts/web/boards/${board.id}/posts/${post.id}|}"
+                <!-- ✅ 게시글 상세 페이지 링크 -->
+                <a th:href="@{|/boards/${board.id}/posts/${post.id}|}"
                    th:text="${post.title}"
                    class="text-decoration-none text-dark fw-semibold"></a>
             </td>
-            <td th:text="${post.user.nickname}">작성자</td>
+            <td th:text="${post.user != null ? post.user.nickname : '익명'}">작성자</td>
             <td>❤️ <span th:text="${post.likeCount}">0</span></td>
             <td th:text="${post.viewCount}">0</td>
             <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2025-10-29</td>
         </tr>
 
+        <!-- 게시글 없을 때 -->
         <tr th:if="${#lists.isEmpty(posts)}">
             <td colspan="6" class="text-muted py-4">등록된 게시글이 없습니다.</td>
         </tr>

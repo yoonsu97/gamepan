@@ -14,6 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByPostId(Long postId);
     List<Comment> findAll();
 
+
     // 내가 쓴 댓글의 게시글을 가져옴
     @Query("""
         SELECT DISTINCT c.post
