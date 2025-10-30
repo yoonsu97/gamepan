@@ -43,6 +43,12 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
+    // ===== 연관관계 편의 메서드 =====
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setBoard(this);
+    }
+
     // 게시판 삭제 시 게시글도 Soft Delete
     public void softDelete() {
         this.isDeleted = true;

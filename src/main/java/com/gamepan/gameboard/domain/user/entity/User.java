@@ -1,10 +1,16 @@
 package com.gamepan.gameboard.domain.user.entity;
 
+import com.gamepan.gameboard.domain.comment.entity.Comment;
+import com.gamepan.gameboard.domain.like.entity.Like;
+import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -39,6 +45,17 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    // ===== 연관관계 매핑 =====
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
 
     public void softDelete() {
         this.isDeleted = true;

@@ -1,11 +1,16 @@
 package com.gamepan.gameboard.domain.post.entity;
 
 import com.gamepan.gameboard.domain.board.entity.Board;
+import com.gamepan.gameboard.domain.comment.entity.Comment;
+import com.gamepan.gameboard.domain.like.entity.Like;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -23,13 +28,20 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                   // 게시글 고유 ID
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id",  nullable = false)
-    private User user;                   // 작성자 ID
+    // ===== 연관관계 =====
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
-    private Board board;                  // 게시판 ID
+    private Board board;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     @Column(nullable = false, length = 50)
     private String title;                   // 게시글 제목
