@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 수정</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<h2>게시판 수정</h2>
+
+<form th:action="@{'/admin/boards/' + ${board.id} + '/update'}" method="post">
+    <div>
+        <label>게시판 이름:</label><br>
+        <input type="text" name="name" th:value="${board.name}" required>
+    </div>
+    <div>
+        <label>게시판 코드:</label><br>
+        <input type="text" name="code" th:value="${board.code}" required>
+    </div>
+    <div>
+        <label>설명:</label><br>
+        <textarea name="description" th:text="${board.description}" rows="3"></textarea>
+    </div>
+    <br>
+    <button type="submit" class="primary">수정</button>
+    <a th:href="@{/admin/boards}">취소</a>
+</form>
+</body>
+</html>

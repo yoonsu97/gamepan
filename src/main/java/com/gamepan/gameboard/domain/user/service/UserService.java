@@ -1,7 +1,6 @@
 package com.gamepan.gameboard.domain.user.service;
 
 import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
-import com.gamepan.gameboard.domain.user.dto.UserUpdateRequestDto;
 import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.exception.DuplicateEmailException;
@@ -10,7 +9,6 @@ import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -56,8 +54,13 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
     }
 
-    //Read - 사용자 모두 가져오기
+    // 전체 유저 조회
     public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    //Read - 사용자 모두 가져오기
+    public List<User> getAllActiveUsers() {
         return userRepository.findAllByIsDeletedFalse();
     }
 

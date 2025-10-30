@@ -1,17 +1,13 @@
 package com.gamepan.gameboard.domain.user.controller;
 
-import com.gamepan.gameboard.domain.user.dto.UserCreateRequestDto;
 import com.gamepan.gameboard.domain.user.dto.UserElevateRequestDto;
 import com.gamepan.gameboard.domain.user.dto.UserResponseDto;
-import com.gamepan.gameboard.domain.user.dto.UserUpdateRequestDto;
-import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.service.UserService;
 import com.gamepan.gameboard.global.api.ApiResponse;
 import com.gamepan.gameboard.global.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +24,7 @@ public class UserController {
     /** ✅ 모든 사용자 조회 (GET /api/users) */
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> users = userService.getAllUsers()
+        List<UserResponseDto> users = userService.getAllActiveUsers()
                 .stream()
                 .map(UserResponseDto::from)
                 .toList();

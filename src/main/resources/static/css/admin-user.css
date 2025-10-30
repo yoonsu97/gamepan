@@ -1,0 +1,59 @@
+body {
+    font-family: system-ui, Arial;
+    margin: 20px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #e5e7eb;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background: #f8fafc;
+}
+
+.toolbar {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+    align-items: center;
+}
+
+.right {
+    margin-left: auto;
+}
+
+button {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: #f3f4f6;
+}
+
+button.primary {
+    background: #111827;
+    color: #fff;
+    border-color: #111827;
+}
+
+button.primary:hover {
+    background: #1f2937;
+}

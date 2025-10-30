@@ -33,6 +33,11 @@
                 <a class="btn" th:href="@{/gamepan}">홈</a>
                 <a class="btn" th:href="@{/login}">로그인</a>
             </div>
+
+            <!-- 관리자 바: 관리자에게만 노출 -->
+            <a sec:authorize="hasRole('ADMIN')" class="admin-enter-btn" th:href="@{/admin}">
+                관리자
+            </a>
         </div>
     </div>
 </nav>
