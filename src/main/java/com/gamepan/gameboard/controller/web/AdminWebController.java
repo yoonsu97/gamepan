@@ -1,10 +1,10 @@
 package com.gamepan.gameboard.controller.web;
 
 import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
-import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.board.service.AdminBoardService;
 import com.gamepan.gameboard.domain.comment.service.CommentService;
 import com.gamepan.gameboard.domain.post.service.PostService;
+import com.gamepan.gameboard.domain.report.service.AdminReportService;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.service.AdminUserService;
 import jakarta.validation.Valid;
@@ -27,20 +27,17 @@ public class AdminWebController {
 
     private final AdminUserService adminUserService;
     private final AdminBoardService adminBoardService;
+    private final AdminReportService adminreportService;
     private final PostService postService;
     private final CommentService commentService;
 
-    // =========================
     //     대시보드
-    // =========================
     @GetMapping
     public String dashboard() {
         return "admin/index"; // templates/admin/index.html
     }
 
-    // =========================
     //     회원 관리 (조회/삭제/복구)
-    // =========================
     @GetMapping("/users")
     public String userList(Model model) {
         model.addAttribute("users", adminUserService.getAllActiveUsers());
@@ -69,10 +66,7 @@ public class AdminWebController {
         return "redirect:/admin/deletedUsers";
     }
 
-    // =========================
-    //     게시판 관리 (생성/수정/삭제/복구)
-    // =========================
-
+    //   게시판 관리 (생성/수정/삭제/복구)
     @GetMapping("/boards")
     public String boardList(Model model) {
         model.addAttribute("boards", adminBoardService.getAllActiveBoards());
@@ -87,7 +81,7 @@ public class AdminWebController {
     @PostMapping("/boards/create")
     public String createBoard(@Valid @ModelAttribute("boardForm") BoardRequestDto dto,
                               RedirectAttributes ra) {
-        Board board = adminBoardService.createBoard(dto);
+        adminBoardService.createBoard(dto);
         ra.addFlashAttribute("message", "게시판이 생성되었습니다.");
         return "redirect:/admin/boards";
     }
@@ -127,5 +121,29 @@ public class AdminWebController {
         adminBoardService.restoreBoard(boardId); // 하위 게시글 복구 정책은 서비스에서 처리
         ra.addFlashAttribute("message", "게시판이 복구되었습니다.");
         return "redirect:/admin/deletedBoards?status=deleted";
+    }
+
+    // 신고 관리 (게시글)
+    /* 신고 목록 화면 */
+    @GetMapping("/reports/posts")
+    public String pendingList(Model model) {
+        model.addAttribute("pendingReports", adminreportService.listPending());
+        return "admin/report/report-post-list";
+    }
+
+    /* 신고 취소  */
+    @PostMapping("/reports/posts/{reportId}/cancel")
+    public String cancel(@PathVariable Long reportId, RedirectAttributes ra) {
+        adminreportService.cancel(reportId);
+        ra.addFlashAttribute("toast", "신고를 취소했습니다.");
+        return "redirect:/admin/reports/posts";
+    }
+
+    /* 삭제 확정 (게시글 삭제) */
+    @PostMapping("/reports/posts/{reportId}/confirm")
+    public String confirmAndDelete(@PathVariable Long reportId, RedirectAttributes ra) {
+        adminreportService.confirmAndDelete(reportId);
+        ra.addFlashAttribute("toast", "신고 승인 및 게시글을 삭제했습니다.");
+        return "redirect:/admin/reports/posts";
     }
 }

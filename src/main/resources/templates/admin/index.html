@@ -19,8 +19,6 @@
             <ul>
                 <li><a th:href="@{/admin/boards}">게시판 목록 / 수정 / 삭제 </a></li>
                 <li><a th:href="@{/admin/deletedBoards}">게시판 복구 </a></li>
-                <li><a th:href="@{/admin/posts}">게시글 삭제 / 복구</a></li>
-                <li><a th:href="@{/admin/comments}">댓글 삭제 (복구 없음)</a></li>
             </ul>
         </div>
 
@@ -30,6 +28,13 @@
             <ul>
                 <li><a th:href="@{/admin/users}">회원 조회</a></li>
                 <li><a th:href="@{/admin/deletedUsers}">삭제된 회원 목록 (복구용)</a></li>
+            </ul>
+        </div>
+
+        <div class="admin-card">
+            <h3>👥 신고 관리</h3>
+            <ul>
+                <li><a th:href="@{/admin/reports/posts}">신고 게시글 목록</a></li>
             </ul>
         </div>
     </section>

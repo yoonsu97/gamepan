@@ -6,6 +6,8 @@ import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
 import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.service.PostService;
+import com.gamepan.gameboard.domain.report.service.ReportService;
+import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,7 @@ public class PostWebController {
     private final PostService postService;
     private final CommentService commentService;
     private final BoardService boardService;
+    private final ReportService reportService;
 
 
     // 게시글 등록 폼
@@ -63,10 +66,15 @@ public class PostWebController {
     @GetMapping("/{postId}")
     public String getPostDetail(@PathVariable Long boardId,
                                 @PathVariable Long postId,
+                                @AuthenticationPrincipal(expression = "user") User currentUser,
                                 Model model) {
         model.addAttribute("board", boardService.getBoard(boardId));
         model.addAttribute("post", postService.getPost(postId));
         model.addAttribute("comments", commentService.getCommentsByPost(postId));
+
+        boolean alreadyReported = reportService.isAlreadyReported(currentUser.getId(), postId);
+        model.addAttribute("alreadyReported", alreadyReported);
+
         return "post/detail"; // templates/post/detail.html
     }
 

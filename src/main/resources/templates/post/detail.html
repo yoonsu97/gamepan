@@ -18,6 +18,18 @@
         </a>
     </div>
 
+    <!-- 이미 신고한 경우: 문구만 표시 -->
+    <div th:if="${alreadyReported}">
+        <p style="color:#d9534f; font-weight:600;">신고한 게시물입니다.</p>
+    </div>
+
+    <!-- 아직 신고 안 한 경우: 신고 버튼 -->
+    <form th:if="${!alreadyReported}"
+          th:action="@{'/boards/' + ${post.board.id} + '/posts/' + ${post.id} + '/report'}"
+          method="post">
+        <button type="submit">신고하기</button>
+    </form>
+
     <div class="post-box">
         <!-- 🔹 작성일 / 조회수 -->
         <div class="text-muted small d-flex justify-content-between">

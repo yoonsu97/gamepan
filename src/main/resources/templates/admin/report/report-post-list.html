@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 수정</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin-user.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<h2>신고 대기 목록</h2>
+
+<div th:if="${toast}" th:text="${toast}" style="color:green;"></div>
+
+<table>
+    <thead>
+    <tr><th>ID</th><th>게시글</th><th>신고자</th><th>신고일</th><th>처리</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${pendingReports}">
+        <td th:text="${r.id}">1</td>
+        <td>
+            <a th:href="@{'/boards/' + ${r.post.board.id} + '/posts/' + ${r.post.id}}"
+               th:text="${r.post.title}">제목</a>
+        </td>
+        <td th:text="${r.reporterId}">123</td>
+        <td th:text="${#temporals.format(r.createdAt,'yyyy.MM.dd HH:mm')}">2025.01.01 12:34</td>
+        <td>
+            <form th:action="@{'/admin/reports/posts/' + ${r.id} + '/cancel'}" method="post" style="display:inline">
+                <button type="submit">신고 취소</button>
+            </form>
+            <form th:action="@{'/admin/reports/posts/' + ${r.id} + '/confirm'}" method="post" style="display:inline">
+                <button type="submit">삭제 확정</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(pendingReports)}">
+        <td colspan="5">대기 중인 신고가 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
