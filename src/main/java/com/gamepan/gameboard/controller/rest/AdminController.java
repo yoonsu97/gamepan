@@ -34,7 +34,7 @@ public class AdminController {
     //권한이 부여됐는지 확인하는 경로
     @GetMapping("/users")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> users = userService.getAllUsers()
+        List<UserResponseDto> users = userService.getAllActiveUsers()
                 .stream()
                 .map(UserResponseDto::from)
                 .toList();

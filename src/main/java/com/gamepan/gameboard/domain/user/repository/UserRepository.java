@@ -14,6 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public Boolean existsByRoleAndIsDeletedFalse(Role role);
     public Optional<User> findByUsernameAndIsDeletedFalse(String username);      // username을 통해 user를 가져옴
     public List<User> findAllByIsDeletedFalse();
+    public List<User> findAllByIsDeletedTrue();
     public Optional<User> findByIdAndIsDeletedFalse(Long id);
+    public Optional<User> findByIdAndIsDeletedTrue(Long id);
 
 }
