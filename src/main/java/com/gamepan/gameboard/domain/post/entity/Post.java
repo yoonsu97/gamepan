@@ -21,8 +21,7 @@ import java.util.List;
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
-// 조회할 때 “deleted = false”인 것만 가져옴(관리자 페이지에서는 조정이 필요)
-/*@Where(clause = "is_deleted = false")*/
+
 public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +43,7 @@ public class Post extends BaseEntity {
     private List<Like> likes = new ArrayList<>();
 
     @Column(nullable = false, length = 50)
-    private String title;                   // 게시글 제목
+    private String title;                   // 게시글  제목
 
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String content;                 // 게시글 본문
