@@ -34,7 +34,7 @@ public class PostController {
 
 
 
-    // 게시글 조회
+    /*// 게시글 조회
     @GetMapping("/boards/{boardId}/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(@PathVariable Long boardId) {
         List<PostResponseDto> posts = postService.getAllPosts(boardId)
@@ -42,7 +42,7 @@ public class PostController {
                 .map(PostResponseDto::from)
                 .toList();
         return ResponseEntity.ok(posts);
-    }
+    }*/
 
     // 상세 조회
     @GetMapping("/{id}")

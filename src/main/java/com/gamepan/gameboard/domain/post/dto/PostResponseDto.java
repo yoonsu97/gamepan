@@ -17,6 +17,7 @@ public class PostResponseDto { // 응답
     private Long id;
     private Long boardId;
     private Long userId;
+    private String nickname;
     private String title;
     private String content;
     private int viewCount;
@@ -27,7 +28,8 @@ public class PostResponseDto { // 응답
     public static PostResponseDto from(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
-                .userId(post.getUser().getId())
+                .userId(post.getUser() != null ? post.getUser().getId() : null)
+                .nickname(post.getUser() != null ? post.getUser().getNickname() : "익명")
                 .boardId(post.getBoard().getId())
                 .title(post.getTitle())
                 .content(post.getContent())

@@ -7,7 +7,6 @@ import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
-import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
