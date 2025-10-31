@@ -28,15 +28,15 @@ public class CommentWebController {
     @PostMapping
     public String createComment(@PathVariable Long boardId,
                                 @PathVariable Long postId,
-                                @AuthenticationPrincipal CustomUserDetails principal,
+                                @AuthenticationPrincipal(expression = "user") User currentUser,
                                 @ModelAttribute CommentRequestDto dto) {
 
-        if (principal == null || principal.getUser() == null) {
+        if (currentUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
         }
 
-        Long currentUserId = principal.getUser().getId();
-        commentService.createComment(postId, currentUserId, dto);
+        Long currentUserId = currentUser.getId();
+        commentService.createComment(postId, currentUser, dto);
 
         // 등록 후 게시글 상세페이지로 리다이렉트
         return "redirect:/boards/" + boardId + "/posts/" + postId;

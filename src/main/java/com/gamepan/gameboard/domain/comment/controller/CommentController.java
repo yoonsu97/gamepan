@@ -27,7 +27,7 @@ public class CommentController {
                                                             @AuthenticationPrincipal CustomUserDetails principal,
                                                             @RequestBody CommentRequestDto dto) {
         Long currentUserId = principal.getUser().getId();
-        Comment comment = commentService.createComment(postId, currentUserId, dto);
+        Comment comment = commentService.createComment(postId, currentUser, dto);
         return ResponseEntity.ok(CommentResponseDto.from(comment));
     }
 

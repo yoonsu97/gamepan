@@ -5,7 +5,6 @@ import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
 import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.service.PostService;
-import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class PostController {
 
 
 
-    /*// 게시글 조회
+    // 게시글 조회
     @GetMapping("/boards/{boardId}/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(@PathVariable Long boardId) {
         List<PostResponseDto> posts = postService.getAllPosts(boardId)
@@ -42,7 +41,7 @@ public class PostController {
                 .map(PostResponseDto::from)
                 .toList();
         return ResponseEntity.ok(posts);
-    }*/
+    }
 
     // 상세 조회
     @GetMapping("/{id}")
@@ -54,18 +53,18 @@ public class PostController {
     // 수정
     @PutMapping("/{id}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id,
-                                                      @AuthenticationPrincipal(expression = "user") User currentUser,
+                                                      @AuthenticationPrincipal CustomUserDetails principal,
                                                       @RequestBody PostRequestDto dto) {
-
-        Post post = postService.updatePost(id, currentUser, dto);
+        Long currentUserId = principal.getUser().getId();
+        Post post = postService.updatePost(id, currentUserId, dto);
         return ResponseEntity.ok(PostResponseDto.from(post));
     }
 
 
     // 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeletePost(@PathVariable Long id, @AuthenticationPrincipal(expression = "user") User currentUser) {
-        Long currentUserId = currentUser.getId();
+    public ResponseEntity<Void> softDeletePost(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails principal) {
+        Long currentUserId = principal.getUser().getId();
         postService.softDeletePost(id, currentUserId);
         return ResponseEntity.noContent().build();
     }

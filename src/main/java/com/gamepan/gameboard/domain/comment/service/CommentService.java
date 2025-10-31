@@ -7,6 +7,7 @@ import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ public class CommentService {
     private final AuthorizationService authorizationService;
 
     //댓글 생성
-    public Comment createComment(Long postId, Long currentUserId, CommentRequestDto dto) {
+    public Comment createComment(Long postId, User currentUser, CommentRequestDto dto) {
         Post post = postRepository.findByIdAndIsDeletedFalse(postId)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
 
@@ -33,12 +34,9 @@ public class CommentService {
             throw new IllegalStateException("삭제된 게시글에는 댓글을 작성할 수 없습니다.");
         }
 
-        User user = userRepository.findByIdAndIsDeletedFalse(currentUserId)
-                .orElseThrow(() -> new RuntimeException("사용자 없음"));
-
         Comment comment = Comment.builder()
                 .post(post)
-                .user(user)
+                .user(currentUser)
                 .content(dto.getContent())
                 .build();
 
@@ -90,15 +88,10 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        Post post = commentRepository.findPostByCommentId(commentId)
+        Post post= commentRepository.findPostByCommentId(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        // 사용자 정보 조회
-        if (currentUser == null) {
-            throw new IllegalArgumentException("로그인 후 이용 가능합니다.");
-        }
-
-        authorizationService.hasCommentPermission(comment, currentUser, "댓글 삭제 권한이 없습니다.");
+        authorizationService.hasCommentPermission(comment, currentUser, "댓글 수정 권한이 없습니다.");
 
         postRepository.decrementCommentCount(post.getId());
         post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
