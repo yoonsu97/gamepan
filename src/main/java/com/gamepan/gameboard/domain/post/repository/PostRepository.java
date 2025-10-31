@@ -19,7 +19,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(Long userId, Pageable pageable);
 
     // 내림차순 정렬
-    List<Post> findAllByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(Long boardId);
+    List<Post> findAllByBoardIdAndIsDeletedFalseOrderByIdDesc(Long boardId);
+
+    // 게시판 내 제목 검색 (대소문자 구분 없이)
+    List<Post> findByBoardIdAndTitleContainingIgnoreCase(Long boardId, String keyword);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Post p set p.viewCount = p.viewCount + 1 where p.id = :postId and p.isDeleted = false")

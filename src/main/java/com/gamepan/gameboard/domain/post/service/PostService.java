@@ -3,6 +3,7 @@ package com.gamepan.gameboard.domain.post.service;
 import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.board.repository.BoardRepository;
 import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
+import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.Role;
@@ -58,14 +59,17 @@ public class PostService {
     }
 
     // 특정 게시판 게시글
-    public List<Post> getAllPosts(Long boardId) {
+    public List<PostResponseDto> getAllPosts(Long boardId) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new RuntimeException("게시판 없음"));
 
         if (board.isDeleted()) {
             throw new IllegalStateException("삭제된 게시판의 게시글은 조회할 수 없습니다.");
         }
-        return postRepository.findAllByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(boardId);
+
+        return postRepository.findAllByBoardIdAndIsDeletedFalseOrderByIdDesc(boardId).stream()
+                .map(PostResponseDto::from)
+                .toList();
     }
 
     // 상세조회
@@ -143,6 +147,12 @@ public class PostService {
 
         post.restore();
         postRepository.save(post);
+    }
+    // 검색
+    public List<PostResponseDto> searchPosts(Long boardId, String keyword) {
+        return postRepository.findByBoardIdAndTitleContainingIgnoreCase(boardId, keyword).stream()
+                .map(PostResponseDto::from)
+                .toList();
     }
 
 

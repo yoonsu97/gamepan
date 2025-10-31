@@ -1,3 +1,4 @@
+/*
 package com.gamepan.gameboard.controller.rest;
 
 import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
@@ -41,7 +42,9 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
-    /** 사용자 삭제  */
+    */
+/** 사용자 삭제  *//*
+
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> softDeleteUser(@PathVariable Long userId) {
         userService.softDeleteUser(userId);
@@ -143,3 +146,4 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 }
+*/

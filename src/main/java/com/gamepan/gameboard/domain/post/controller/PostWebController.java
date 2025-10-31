@@ -18,6 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -54,12 +56,32 @@ public class PostWebController {
     }
 
 
-    // 게시글 조회
+    /*// 게시글 조회
     @GetMapping
     public String getAllPosts(@PathVariable Long boardId, Model model) {
         model.addAttribute("board", boardService.getBoard(boardId));
         model.addAttribute("posts", postService.getAllPosts(boardId));
         return "post/list"; // templates/post/list.html
+    }*/
+    // 게시글 조회
+    @GetMapping
+    public String getAllPosts(@PathVariable Long boardId,
+                              @RequestParam(value = "keyword", required = false) String keyword,
+                              Model model) {
+        model.addAttribute("board", boardService.getBoard(boardId));
+
+        // keyword가 있으면 검색, 없으면 전체 조회
+        List<PostResponseDto> posts;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            posts = postService.searchPosts(boardId, keyword);
+        } else {
+            posts = postService.getAllPosts(boardId);
+        }
+
+        // ✅ DTO 리스트를 모델에 추가
+        model.addAttribute("posts", posts);
+
+        return "post/list";
     }
 
     // 상세 조회

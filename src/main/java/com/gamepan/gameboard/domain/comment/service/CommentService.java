@@ -112,21 +112,5 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    //  관리자 전용
-    public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-
-        Post post = comment.getPost();
-        if (post.isDeleted()) {
-            throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
-        }
-        //  댓글 삭제 + 카운트 감소
-        postRepository.decrementCommentCount(post.getId());
-        post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
-
-        commentRepository.delete(comment);
-    }
-
 
 }
