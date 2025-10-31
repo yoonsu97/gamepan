@@ -5,6 +5,8 @@ import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.report.dto.ReportPostRequest;
 import com.gamepan.gameboard.domain.report.entity.Report;
 import com.gamepan.gameboard.domain.report.repository.ReportRepository;
+import com.gamepan.gameboard.global.exception.BusinessException;
+import com.gamepan.gameboard.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,10 @@ public class ReportService {
     // 사용자: 게시글 신고
     public Long submit(Long reporterId, ReportPostRequest req) {
         Post post = postRepository.findByIdAndIsDeletedFalse(req.getPostId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
         if (reportRepository.existsByReporterIdAndPost_Id(reporterId, req.getPostId())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 신고한 게시글입니다.");
+            throw new BusinessException(ErrorCode.REPORT_POST_DUPLICATE);
         }
 
         Report report = Report.builder()

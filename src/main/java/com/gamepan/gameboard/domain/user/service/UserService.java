@@ -6,16 +6,16 @@ import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.exception.DuplicateEmailException;
 import com.gamepan.gameboard.domain.user.exception.DuplicateUsernameException;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.exception.BusinessException;
+import com.gamepan.gameboard.global.exception.ErrorCode;
+import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.*;
 
 // 사용자 관련 비즈니스 로직 처리를 위한 서비스
 @Service
@@ -24,17 +24,15 @@ import static org.springframework.http.HttpStatus.*;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Value("${app.invite-code:}")   // application-*.yml 에 설정해둔 초대코드
-    private String adminInviteCode;
+    private final AuthorizationService authorizationService;
 
     // Create - 유저 객체 만들기
     public User createUser(UserCreateRequestDto dto, Role role) {
         // 유저 객체 생성전 중복 검사 (username, email)
-        if (userRepository.existsByUsernameAndIsDeletedFalse(dto.getUsername())) {
+        if (userRepository.existsByUsernameAndIsDeletedFalse(dto.getUsername())){
             throw new DuplicateUsernameException();
         }
-        if (userRepository.existsByEmailAndIsDeletedFalse(dto.getEmail())) {
+        if (userRepository.existsByEmailAndIsDeletedFalse(dto.getEmail())){
             throw new DuplicateEmailException();
         }
 
@@ -51,7 +49,7 @@ public class UserService {
     //Read - 사용자 1명 가져오기
     public User getUserById(Long id) {
         return userRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     // 전체 유저 조회
@@ -83,7 +81,7 @@ public class UserService {
     @Transactional
     public void updateNickname(Long userId, String nickname) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.updateNickname(nickname); // 엔티티에 세터대신 도메인 메서드 권장
         // 영속 상태이므로 flush 시점에 자동 업데이트
@@ -93,10 +91,10 @@ public class UserService {
     @Transactional
     public void updatePassword(Long userId, String currentPassword, String newPassword) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new ResponseStatusException(UNAUTHORIZED, "현재 비밀번호가 올바르지 않습니다.");
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCH);
         }
 
         // 비밀번호 정책 검증(길이/문자조합 등) 필요 시 추가
@@ -106,7 +104,7 @@ public class UserService {
     //  삭제 (Soft Delete 적용)
     public void softDeleteUser(Long id) {
         User user = userRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("삭제할 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.softDelete(); // BaseEntity의 softDelete() 메서드 호출
         userRepository.save(user);
@@ -115,46 +113,9 @@ public class UserService {
     //  복구
     public void restoreUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("복구할 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.restore(); // BaseEntity의 restore() 메서드 호출
         userRepository.save(user);
-    }
-
-    // 권한이 존재하는지 확인 (admin 권한 부여에 사용)
-    public boolean existsByRole(Role role) {
-        return userRepository.existsByRoleAndIsDeletedFalse(role);
-    }
-
-    // Admin 권한 부여
-    @Transactional
-    public void promoteToAdminByUsername(String username) {
-        var user = userRepository.findByUsernameAndIsDeletedFalse(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당 아이디를 찾을 수 없습니다. " + username));
-        if (user.getRole() != Role.ADMIN) {
-            user.setAdmin();             // 내부에서 role=ADMIN 세팅
-            // 변경감지로 flush됨(트랜잭션 활성 상태)
-        }
-    }
-
-    @Transactional
-    public void inviteToAdmin(Long userId, String inviteCode) {
-
-        // 1) 기능 토글/코드 미설정 방어
-        if (adminInviteCode == null || adminInviteCode.isBlank()) {
-            throw new IllegalStateException("관리자 승격 기능이 비활성화되어 있습니다.");
-        }
-
-        // 2) 코드 검증
-        if (!adminInviteCode.equals(inviteCode)) {
-            throw new IllegalArgumentException("Admin 초대 코드가 올바르지 않습니다.");
-        }
-
-        // 3) 유저 조회 및 승격
-        User user = userRepository.findByIdAndIsDeletedFalse(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
-        user.setAdmin(); // 내부에서 role = ADMIN 으로 세팅되는 메서드
-        // 변경감지로 업데이트 반영
     }
 }

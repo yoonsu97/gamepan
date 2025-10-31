@@ -5,6 +5,8 @@ import com.gamepan.gameboard.domain.like.repository.LikeRepository;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
+import com.gamepan.gameboard.global.exception.BusinessException;
+import com.gamepan.gameboard.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,7 +33,7 @@ public class LikeService {
     @Transactional
     public ToggleResult toggleLike(Long postId, User user) {
         Post post = postRepository.findByIdAndIsDeletedFalse(postId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
         var existing = likeRepository.findByPost_IdAndUser_Id(postId, user.getId());
 

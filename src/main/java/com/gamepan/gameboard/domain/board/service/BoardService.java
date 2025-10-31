@@ -9,12 +9,12 @@ import com.gamepan.gameboard.domain.post.service.PostService;
 import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.exception.BusinessException;
+import com.gamepan.gameboard.global.exception.ErrorCode;
 import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class BoardService {
     private final AuthorizationService authorizationService;
 
 
-    // 게시판 생성 (중복 검사)
+    /*// 게시판 생성 (중복 검사)
     public Board createBoard(BoardRequestDto dto) {
         if (boardRepository.existsByCodeAndIsDeletedFalse(dto.getCode())) {
             throw new IllegalArgumentException("이미 존재하는 게시판 코드입니다: " + dto.getCode());
@@ -41,7 +41,7 @@ public class BoardService {
                 .description(dto.getDescription())
                 .build();
         return boardRepository.save(board);
-    }
+    }*/
 
     // 게시판 전체조회
     public List<Board> getAllActiveBoards() {
@@ -51,10 +51,10 @@ public class BoardService {
     // 게시판 단건 조회
     public Board getBoard(Long id) {
         return boardRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
     }
 
-    // 게시판 수정
+    /*// 게시판 수정
     public Board updateBoard(long id, BoardRequestDto dto) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new IllegalArgumentException("수정할 게시판을 찾을 수 없습니다."));
@@ -64,9 +64,9 @@ public class BoardService {
         board.setDescription(dto.getDescription());
 
         return boardRepository.save(board);
-    }
+    }*/
 
-    // 게시판 삭제 (Soft Delete + 게시글까지 함께 삭제)
+    /*// 게시판 삭제 (Soft Delete + 게시글까지 함께 삭제)
     public void softDeleteBoard(Long id, Long currentUserId) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시판이 존재하지 않습니다."));
@@ -94,5 +94,5 @@ public class BoardService {
         board.restore(); // 게시판 및 하위 게시글 복구
 
         boardRepository.save(board);
-    }
+    }*/
 }

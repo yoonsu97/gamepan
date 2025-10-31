@@ -1,16 +1,14 @@
 package com.gamepan.gameboard.global.help;
 
-import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.comment.entity.Comment;
 import com.gamepan.gameboard.domain.post.entity.Post;
-import com.gamepan.gameboard.domain.report.entity.Report;
 import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
+import com.gamepan.gameboard.global.exception.BusinessException;
+import com.gamepan.gameboard.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 
 @Component
@@ -27,37 +25,38 @@ public class AuthorizationService {
         return Author.getId() != null && Author.getId().equals(currentUser.getId());
     }
 
-    private void forbid(String msg) {
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, msg);
+    private void exception(ErrorCode error) {
+        throw new BusinessException(error);
     }
 
-    public void hasUserPermission(User user, User currentUser, String msg) {
-        if (!isAdmin(currentUser) && !isAuthor(user, currentUser)) {
-            forbid(msg);
+    public void AdminHasUserPermission( User currentUser, ErrorCode error) {
+        if (!isAdmin(currentUser)) {
+            exception(error);
         }
     }
 
-    public void hasPostPermission(Post post, User currentUser, String msg) {
+
+    public void hasPostPermission(Post post, User currentUser, ErrorCode error) {
         if (!isAdmin(currentUser) && !isAuthor(post.getUser(), currentUser)) {
-            forbid(msg);
+            exception(error);
         }
     }
 
-    public void hasBoardPermission(User currentUser, String msg) {
+    public void hasBoardPermission(User currentUser, ErrorCode error) {
         if (!isAdmin(currentUser)) {
-            forbid(msg);
+            exception(error);
         }
     }
 
-    public void hasCommentPermission(Comment comment, User currentUser, String msg) {
+    public void hasCommentPermission(Comment comment, User currentUser, ErrorCode error) {
         if (!isAdmin(currentUser) && !isAuthor(comment.getUser(), currentUser)) {
-            forbid(msg);
+            exception(error);
         }
     }
 
-    public void hasReportPermission( User currentUser, String msg) {
+    public void hasReportPermission( User currentUser, ErrorCode error) {
         if (!isAdmin(currentUser)) {
-            forbid(msg);
+            exception(error);
         }
     }
 }

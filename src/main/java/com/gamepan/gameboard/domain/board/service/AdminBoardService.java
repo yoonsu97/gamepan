@@ -3,39 +3,33 @@ package com.gamepan.gameboard.domain.board.service;
 import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
 import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.board.repository.BoardRepository;
-import com.gamepan.gameboard.domain.post.entity.Post;
-import com.gamepan.gameboard.domain.post.repository.PostRepository;
-import com.gamepan.gameboard.domain.post.service.PostService;
-import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
-import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.exception.BusinessException;
 import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import com.gamepan.gameboard.global.exception.ErrorCode;
+
 
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AdminBoardService {
     private final BoardRepository boardRepository;
-    private final PostRepository postRepository;
-    private final PostService postService;
-    private final UserRepository userRepository;
     private final AuthorizationService authorizationService;
 
 
     // 게시판 생성 (중복 검사)
     public Board createBoard(User currentUser, BoardRequestDto dto) {
         if (boardRepository.existsByCodeAndIsDeletedFalse(dto.getCode())) {
-            throw new IllegalArgumentException("이미 존재하는 게시판 코드입니다: " + dto.getCode());
+            throw new BusinessException(ErrorCode.BOARD_DUPLICATE);
         }
 
-        authorizationService.hasBoardPermission(currentUser, "게시판 생성 권한이 없습니다.");
+        authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
         Board board = Board.builder()
                 .code(dto.getCode())
@@ -58,15 +52,15 @@ public class AdminBoardService {
     // 게시판 단건 조회
     public Board getBoard(Long id) {
         return boardRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시판이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
     }
 
     // 게시판 수정
     public Board updateBoard(long id, User currentUser, BoardRequestDto dto) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("수정할 게시판을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
-        authorizationService.hasBoardPermission(currentUser, "게시판 수정 권한이 없습니다.");
+        authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
         board.setCode(dto.getCode());
         board.setName(dto.getName());
@@ -78,13 +72,13 @@ public class AdminBoardService {
     // 게시판 삭제 (Soft Delete )
     public void softDeleteBoard(Long id, User currentUser) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시판이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
         if(currentUser == null){
-            throw new IllegalArgumentException("현재 유저는 존재하지 않습니다.");
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
 
-        authorizationService.hasBoardPermission(currentUser, "게시판 삭제 권한이 없습니다.");
+        authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
         board.softDelete();
 
@@ -93,14 +87,10 @@ public class AdminBoardService {
 
     // 게시판 복구 (게시글 포함 복구)
     public void restoreBoard(Long id, User currentUser) {
-        Board board = boardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("복구할 게시판이 존재하지 않습니다."));
+        Board board = boardRepository.findByIdAndIsDeletedTrue(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
-        if (!board.isDeleted()) {
-            throw new IllegalStateException("이미 활성화된 게시판입니다.");
-        }
-
-        authorizationService.hasBoardPermission(currentUser, "게시판 복구 권한이 없습니다.");
+        authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
         board.restore(); // 게시판 및 하위 게시글 복구
 
