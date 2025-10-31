@@ -4,6 +4,7 @@ import com.gamepan.gameboard.domain.comment.dto.CommentRequestDto;
 import com.gamepan.gameboard.domain.comment.dto.CommentResponseDto;
 import com.gamepan.gameboard.domain.comment.entity.Comment;
 import com.gamepan.gameboard.domain.comment.service.CommentService;
+import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,15 +57,14 @@ public class CommentWebController {
     public String updateComment(@PathVariable Long boardId,
                                 @PathVariable Long postId,
                                 @PathVariable Long commentId,
-                                @AuthenticationPrincipal CustomUserDetails principal,
+                                @AuthenticationPrincipal(expression = "user") User currentUser,
                                 @ModelAttribute CommentRequestDto dto) {
 
-        if (principal == null || principal.getUser() == null) {
+        if (currentUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
         }
 
-        Long currentUserId = principal.getUser().getId();
-        commentService.updateComment(commentId, currentUserId, dto);
+        commentService.updateComment(commentId, currentUser, dto);
 
         return "redirect:/boards/" + boardId + "/posts/" + postId;
     }
@@ -74,14 +74,9 @@ public class CommentWebController {
     public String deleteComment(@PathVariable Long boardId,
                                 @PathVariable Long postId,
                                 @PathVariable Long commentId,
-                                @AuthenticationPrincipal CustomUserDetails principal) {
+                                @AuthenticationPrincipal(expression = "user") User currentUser) {
 
-        if (principal == null || principal.getUser() == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
-        }
-
-        Long currentUserId = principal.getUser().getId();
-        commentService.deleteComment(commentId, currentUserId);
+        commentService.deleteComment(commentId, currentUser);
 
         return "redirect:/boards/" + boardId + "/posts/" + postId;
     }

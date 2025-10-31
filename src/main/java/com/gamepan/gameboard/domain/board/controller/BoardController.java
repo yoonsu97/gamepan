@@ -1,3 +1,4 @@
+/*
 package com.gamepan.gameboard.domain.board.controller;
 
 import com.gamepan.gameboard.domain.board.dto.BoardResponseDto;
@@ -17,12 +18,15 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    /*// 게시판 생성(관리자 기능) - POST /boards
+    */
+/*//*
+/ 게시판 생성(관리자 기능) - POST /boards
     @PostMapping
     public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto dto) {
         Board board = boardService.createBoard(dto);
         return ResponseEntity.ok(BoardResponseDto.from(board));
-    }*/
+    }*//*
+
     // 게시판 목록  보기- GET /boards
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
@@ -39,14 +43,18 @@ public class BoardController {
         return ResponseEntity.ok(BoardResponseDto.from(board));
     }
 
-    /*// 게시글 수정(작성자, 관리자 권한)
+    */
+/*//*
+/ 게시글 수정(작성자, 관리자 권한)
     @PutMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id, @RequestBody BoardRequestDto dto) {
         Board updated = boardService.updateBoard(id,dto);
         return ResponseEntity.ok(BoardResponseDto.from(updated));
-    }*/
+    }*//*
 
-   /* // 게시판 soft delete (관리자 기능) -  DELETE /boards/{board_id}
+
+   */
+/* // 게시판 soft delete (관리자 기능) -  DELETE /boards/{board_id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteBoard(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails principal) {
         Long currentUserId = principal.getUser().getId();
@@ -59,5 +67,7 @@ public class BoardController {
     public ResponseEntity<String> restoreBoard(@PathVariable Long id) {
         boardService.restoreBoard(id);
         return ResponseEntity.ok("게시판이 복구되었습니다.");
-    }*/
+    }*//*
+
 }
+*/

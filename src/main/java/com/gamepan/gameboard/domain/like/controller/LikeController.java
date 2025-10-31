@@ -1,3 +1,4 @@
+/*
 package com.gamepan.gameboard.domain.like.controller;
 
 import com.gamepan.gameboard.domain.like.service.LikeService;
@@ -34,4 +35,4 @@ public class LikeController {
                 )
         );
     }
-}
+}*/

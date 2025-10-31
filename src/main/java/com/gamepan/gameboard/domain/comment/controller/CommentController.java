@@ -1,3 +1,4 @@
+/*
 package com.gamepan.gameboard.domain.comment.controller;
 
 import com.gamepan.gameboard.domain.comment.dto.CommentRequestDto;
@@ -41,11 +42,13 @@ public class CommentController {
     }
 
     // 댓글 수정
-    /*@PutMapping("/{id}")
+    */
+/*@PutMapping("/{id}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto dto) {
         Comment comment = commentService.updateComment(id,dto);
         return ResponseEntity.ok(CommentResponseDto.from(comment));
-    }*/
+    }*//*
+
 
     // 댓글 삭제
     @DeleteMapping("/{id}")
@@ -54,3 +57,4 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 }
+*/

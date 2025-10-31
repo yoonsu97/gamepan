@@ -8,6 +8,7 @@ import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ public class PostService {
     private final PostRepository postRepository; //DB 접근을 위한 Repository 의존성 주입
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final AuthorizationService authorizationService;
 
     // 게시글 생성 메서드
     public Post createPost(Long boardId, Long userId, PostRequestDto dto) {
@@ -90,7 +92,7 @@ public class PostService {
     }
 
     // 게시글 수정
-    public Post updatePost(Long id, Long currentUserId,PostRequestDto dto) {
+    public Post updatePost(Long id, User currentUser ,PostRequestDto dto) {
         // 기존 기시글 찾기. 없으면 예외
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "수정 할 게시글이 없습니다."));
@@ -99,9 +101,7 @@ public class PostService {
             throw new IllegalStateException("삭제된 게시글은 수정할 수 없습니다.");
         }
 
-        if(!post.getUser().getId().equals(currentUserId) && !post.getUser().getRole().equals(Role.ADMIN)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정 권한이 없습니다.");
-        }
+        authorizationService.hasPostPermission(post, currentUser,"게시글 수정 권한이 없습니다.");
 
         // 기존 엔티티 변경 -> 이미 있는거를 조회해서, 제목이랑 내용 수정하기 위함.
         post.setTitle(dto.getTitle());
@@ -112,13 +112,11 @@ public class PostService {
     }
 
     //  게시글 삭제 (Soft Delete 적용)
-    public void softDeletePost(Long id, Long currentUserId) {
+    public void softDeletePost(Long id, User currentUser) {
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 할 게시글이 없습니다."));
 
-        if(!post.getUser().getId().equals(currentUserId) && !post.getUser().getRole().equals(Role.ADMIN)){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "삭제 권한이 없습니다.");
-        }
+        authorizationService.hasPostPermission(post, currentUser,"게시글 삭제 권한이 없습니다.");
 
 
         post.softDelete(); // BaseEntity의 softDelete() 메서드 호출

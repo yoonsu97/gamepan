@@ -7,6 +7,7 @@ import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,9 +23,10 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final AuthorizationService authorizationService;
 
     //댓글 생성
-    public Comment createComment(Long postId,Long currentUserId,CommentRequestDto dto) {
+    public Comment createComment(Long postId, Long currentUserId, CommentRequestDto dto) {
         Post post = postRepository.findByIdAndIsDeletedFalse(postId)
                 .orElseThrow(() -> new RuntimeException("게시글 없음"));
 
@@ -73,13 +75,11 @@ public class CommentService {
     }
 
     // 댓글 수정
-    public Comment updateComment(Long id, Long currentUserId, CommentRequestDto dto) {
+    public Comment updateComment(Long id, User currentUser, CommentRequestDto dto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        if (!comment.getUser().getId().equals(currentUserId)) {
-            throw new IllegalStateException("본인 댓글만 수정할 수 있습니다.");
-        }
+        authorizationService.hasCommentPermission(comment, currentUser, "댓글 수정 권한이 없습니다.");
 
         comment.setContent(dto.getContent());
         return commentRepository.save(comment);
@@ -87,46 +87,23 @@ public class CommentService {
 
 
     // 댓글 삭제 (작성자 또는 관리자 가능)
-    public void deleteComment(Long commentId, Long currentUserId) {
+    public void deleteComment(Long commentId, User currentUser) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
-        Post post = comment.getPost();
-        if (post.isDeleted()) {
-            throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
+        Post post = commentRepository.findPostByCommentId(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        // 사용자 정보 조회
+        if (currentUser == null) {
+            throw new IllegalArgumentException("로그인 후 이용 가능합니다.");
         }
 
-        // 🔹 사용자 정보 조회
-        User user = userRepository.findByIdAndIsDeletedFalse(currentUserId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-
-        boolean isOwner = comment.getUser().getId().equals(currentUserId);
-        boolean isAdmin = user.getRole().name().equals("ADMIN");
-
-        if (!isOwner && !isAdmin) {
-            throw new IllegalStateException("삭제 권한이 없습니다.");
-        }
+        authorizationService.hasCommentPermission(comment, currentUser, "댓글 삭제 권한이 없습니다.");
 
         postRepository.decrementCommentCount(post.getId());
         post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
         commentRepository.delete(comment);
     }
-
-    //  관리자 전용
-    public void deleteComment(Long commentId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-
-        Post post = comment.getPost();
-        if (post.isDeleted()) {
-            throw new IllegalStateException("삭제된 게시글의 댓글은 삭제할 수 없습니다.");
-        }
-        //  댓글 삭제 + 카운트 감소
-        postRepository.decrementCommentCount(post.getId());
-        post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
-
-        commentRepository.delete(comment);
-    }
-
 
 }

@@ -4,6 +4,8 @@ import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.report.entity.Report;
 import com.gamepan.gameboard.domain.report.repository.ReportRepository;
+import com.gamepan.gameboard.domain.user.entity.User;
+import com.gamepan.gameboard.global.help.AuthorizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 public class AdminReportService {
     private final ReportRepository reportRepository;
     private final PostRepository postRepository;
+    private final AuthorizationService authorizationService;
 
     // 관리자: 대기중 신고 목록(게시글 fetch join 포함)
     public List<Report> listPending() {
@@ -25,19 +28,24 @@ public class AdminReportService {
     }
 
     // 관리자: 신고 취소(기각에 해당)
-    public void cancel(Long reportId) {
+    public void cancel(Long reportId, User currentUser) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "신고를 찾을 수 없습니다."));
+
+        authorizationService.hasReportPermission(currentUser, "신고 취소 권한이 없습니다.");
+
         report.setStatus(Report.Status.CANCELED);
     }
 
     // 관리자: 삭제 확정(신고 인정 + 게시글 소프트 딜리트)
-    public void confirmAndDelete(Long reportId) {
+    public void confirmAndDelete(Long reportId, User currentUser) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "신고를 찾을 수 없습니다."));
 
         Post post = postRepository.findByIdAndIsDeletedFalse(report.getPost().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "이미 삭제된 게시글입니다."));
+
+        authorizationService.hasReportPermission(currentUser, "신고 확정 권한이 없습니다.");
 
         // 1) 신고 상태 확정
         report.setStatus(Report.Status.CONFIRMED);

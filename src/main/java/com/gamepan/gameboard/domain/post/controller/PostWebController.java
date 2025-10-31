@@ -98,14 +98,13 @@ public class PostWebController {
     @PostMapping("/{postId}/edit")
     public String updatePost(@PathVariable Long boardId,
                              @PathVariable Long postId,
-                             @AuthenticationPrincipal CustomUserDetails principal,
+                             @AuthenticationPrincipal(expression = "user") User currentUser,
                              @ModelAttribute PostRequestDto dto) {
-        if (principal == null || principal.getUser() == null) {
+        if (currentUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
         }
 
-        Long currentUserId = principal.getUser().getId();
-        postService.updatePost(postId, currentUserId, dto);
+        postService.updatePost(postId, currentUser, dto);
 
         return "redirect:/boards/" + boardId + "/posts/" + postId;
     }
@@ -115,13 +114,12 @@ public class PostWebController {
     @PostMapping("/{postId}/delete")
     public String deletePost(@PathVariable Long boardId,
                              @PathVariable Long postId,
-                             @AuthenticationPrincipal CustomUserDetails principal) {
-        if (principal == null || principal.getUser() == null) {
+                             @AuthenticationPrincipal(expression = "user") User currentUser) {
+        if (currentUser == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
         }
 
-        Long currentUserId = principal.getUser().getId();
-        postService.softDeletePost(postId, currentUserId);
+        postService.softDeletePost(postId, currentUser);
 
         return "redirect:/boards/" + boardId + "/posts";
     }

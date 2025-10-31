@@ -46,8 +46,9 @@ public class AdminWebController {
 
     @PostMapping("/users/delete")
     public String userDelete(@RequestParam(name = "userIds", required = false) List<Long> userIds,
+                             @AuthenticationPrincipal(expression = "user") User currentUser,
                              RedirectAttributes ra) {
-        int affected = adminUserService.deleteUsers(userIds);
+        int affected = adminUserService.deleteUsers(userIds, currentUser);
         ra.addFlashAttribute("message", affected > 0 ? affected + "명 삭제 완료" : "삭제할 사용자가 없습니다.");
         return "redirect:/admin/users";
     }
@@ -60,8 +61,9 @@ public class AdminWebController {
 
     @PostMapping("/deletedUsers/restore")
     public String restoreUsers(@RequestParam(name = "userIds", required = false) List<Long> userIds,
+                               @AuthenticationPrincipal(expression = "user") User currentUser,
                                RedirectAttributes ra) {
-        int affected = adminUserService.restoreUsers(userIds);
+        int affected = adminUserService.restoreUsers(userIds, currentUser);
         ra.addFlashAttribute("message", affected > 0 ? affected + "명 복구 완료" : "복구할 사용자가 없습니다.");
         return "redirect:/admin/deletedUsers";
     }
@@ -80,8 +82,9 @@ public class AdminWebController {
 
     @PostMapping("/boards/create")
     public String createBoard(@Valid @ModelAttribute("boardForm") BoardRequestDto dto,
+                              @AuthenticationPrincipal(expression = "user") User currentUser,
                               RedirectAttributes ra) {
-        adminBoardService.createBoard(dto);
+        adminBoardService.createBoard(currentUser, dto);
         ra.addFlashAttribute("message", "게시판이 생성되었습니다.");
         return "redirect:/admin/boards";
     }
@@ -95,8 +98,9 @@ public class AdminWebController {
     @PostMapping("/boards/{boardId}/update")
     public String updateBoard(@PathVariable Long boardId,
                               @Valid @ModelAttribute("boardForm") BoardRequestDto dto,
+                              @AuthenticationPrincipal(expression = "user") User currentUser,
                               RedirectAttributes ra) {
-        adminBoardService.updateBoard(boardId, dto);
+        adminBoardService.updateBoard(boardId, currentUser, dto);
         ra.addFlashAttribute("message", "게시판이 수정되었습니다.");
         return "redirect:/admin/boards";
     }
@@ -105,7 +109,7 @@ public class AdminWebController {
     public String deleteBoard(@PathVariable Long boardId,
                               @AuthenticationPrincipal(expression = "user") User currentUser,
                               RedirectAttributes ra) {
-        adminBoardService.softDeleteBoard(boardId,currentUser.getId()); // 관리자 전용 삭제
+        adminBoardService.softDeleteBoard(boardId,currentUser); // 관리자 전용 삭제
         ra.addFlashAttribute("message", "게시판이 삭제되었습니다.");
         return "redirect:/admin/boards";
     }
@@ -117,8 +121,10 @@ public class AdminWebController {
     }
 
     @PostMapping("/deletedBoards/{boardId}/restore")
-    public String restoreBoard(@PathVariable Long boardId, RedirectAttributes ra) {
-        adminBoardService.restoreBoard(boardId); // 하위 게시글 복구 정책은 서비스에서 처리
+    public String restoreBoard(@PathVariable Long boardId,
+                               @AuthenticationPrincipal(expression = "user") User currentUser,
+                               RedirectAttributes ra) {
+        adminBoardService.restoreBoard(boardId, currentUser); // 하위 게시글 복구 정책은 서비스에서 처리
         ra.addFlashAttribute("message", "게시판이 복구되었습니다.");
         return "redirect:/admin/deletedBoards?status=deleted";
     }
@@ -133,16 +139,20 @@ public class AdminWebController {
 
     /* 신고 취소  */
     @PostMapping("/reports/posts/{reportId}/cancel")
-    public String cancel(@PathVariable Long reportId, RedirectAttributes ra) {
-        adminreportService.cancel(reportId);
+    public String cancel(@PathVariable Long reportId,
+                         @AuthenticationPrincipal(expression = "user") User currentUser,
+                         RedirectAttributes ra) {
+        adminreportService.cancel(reportId, currentUser);
         ra.addFlashAttribute("toast", "신고를 취소했습니다.");
         return "redirect:/admin/reports/posts";
     }
 
     /* 삭제 확정 (게시글 삭제) */
     @PostMapping("/reports/posts/{reportId}/confirm")
-    public String confirmAndDelete(@PathVariable Long reportId, RedirectAttributes ra) {
-        adminreportService.confirmAndDelete(reportId);
+    public String confirmAndDelete(@PathVariable Long reportId,
+                                   @AuthenticationPrincipal(expression = "user") User currentUser,
+                                   RedirectAttributes ra) {
+        adminreportService.confirmAndDelete(reportId, currentUser);
         ra.addFlashAttribute("toast", "신고 승인 및 게시글을 삭제했습니다.");
         return "redirect:/admin/reports/posts";
     }

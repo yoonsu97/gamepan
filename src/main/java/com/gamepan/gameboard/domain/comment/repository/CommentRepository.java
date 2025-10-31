@@ -9,13 +9,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByPostId(Long postId);
     List<Comment> findAll();
 
+    // 해당 댓글이 달린 게시글을 가져옴
+    @Query("""
+      select p
+      from Comment c
+      join c.post p
+      where c.id = :commentId
+        and p.isDeleted = false
+    """)
+    Optional<Post> findPostByCommentId(@Param("commentId") Long commentId);
 
-    // 내가 쓴 댓글의 게시글을 가져옴
+    // 해당 유저의 댓글의 게시글을 가져옴
     @Query("""
         SELECT DISTINCT c.post
         FROM Comment c

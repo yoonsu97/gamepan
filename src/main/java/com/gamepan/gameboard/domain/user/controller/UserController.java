@@ -1,3 +1,4 @@
+/*
 package com.gamepan.gameboard.domain.user.controller;
 
 import com.gamepan.gameboard.domain.user.dto.UserElevateRequestDto;
@@ -21,7 +22,9 @@ public class UserController {
 
     private final UserService userService;
 
-    /** ✅ 모든 사용자 조회 (GET /api/users) */
+    */
+/** ✅ 모든 사용자 조회 (GET /api/users) *//*
+
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         List<UserResponseDto> users = userService.getAllActiveUsers()
@@ -31,30 +34,42 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    /** ✅ 특정 사용자 조회 (GET /api/users/{id}) */
+    */
+/** ✅ 특정 사용자 조회 (GET /api/users/{id}) *//*
+
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(UserResponseDto.from(user));
     }
 
-    /** ✅ 사용자 등록 (POST /api/users) *//*
+    */
+/** ✅ 사용자 등록 (POST /api/users) *//*
+*/
+/*
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateRequestDto request) {
         User user = userService.createUser(request, Role.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponseDto.from(user));
-    }*/
+    }*//*
 
-    /** ✅ 사용자 수정 (PUT /api/users/{id}) */
-    /*@PutMapping("/{id}")
+
+    */
+/** ✅ 사용자 수정 (PUT /api/users/{id}) *//*
+
+    */
+/*@PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
             @RequestBody UserUpdateRequestDto request) {
         User updated = userService.updateUser(id, request);
         return ResponseEntity.ok(UserResponseDto.from(updated));
-    }*/
+    }*//*
 
-    /** ✅ 사용자 삭제 (DELETE /api/users/{id}) */
+
+    */
+/** ✅ 사용자 삭제 (DELETE /api/users/{id}) *//*
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDeleteUser(@PathVariable Long id) {
         userService.softDeleteUser(id);
@@ -79,3 +94,4 @@ public class UserController {
 
 }
 
+*/

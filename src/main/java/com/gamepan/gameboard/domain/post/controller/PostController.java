@@ -1,9 +1,11 @@
+/*
 package com.gamepan.gameboard.domain.post.controller;
 
 import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
 import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.service.PostService;
+import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,16 @@ public class PostController {
     private final PostService postService;
 
     //게시글 등록
-    /*@PostMapping("/boards/{boardId}/posts")
+    */
+/*@PostMapping("/boards/{boardId}/posts")
     public ResponseEntity<PostResponseDto> createPost(
                                                       @AuthenticationPrincipal CustomUserDetails principal,
                                                       @RequestBody PostRequestDto dto) {
         Long userId = principal.getUser().getId(); // 현재 로그인한 사용자 ID
         Post post = postService.createPost(userId, dto);
         return ResponseEntity.ok(PostResponseDto.from(post));
-    }*/
+    }*//*
+
 
 
     // 게시글 조회
@@ -50,18 +54,18 @@ public class PostController {
     // 수정
     @PutMapping("/{id}")
     public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id,
-                                                      @AuthenticationPrincipal CustomUserDetails principal,
+                                                      @AuthenticationPrincipal(expression = "user") User currentUser,
                                                       @RequestBody PostRequestDto dto) {
-        Long currentUserId = principal.getUser().getId();
-        Post post = postService.updatePost(id, currentUserId, dto);
+
+        Post post = postService.updatePost(id, currentUser, dto);
         return ResponseEntity.ok(PostResponseDto.from(post));
     }
 
 
     // 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> softDeletePost(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails principal) {
-        Long currentUserId = principal.getUser().getId();
+    public ResponseEntity<Void> softDeletePost(@PathVariable Long id, @AuthenticationPrincipal(expression = "user") User currentUser) {
+        Long currentUserId = currentUser.getId();
         postService.softDeletePost(id, currentUserId);
         return ResponseEntity.noContent().build();
     }
@@ -73,3 +77,4 @@ public class PostController {
         return ResponseEntity.ok("게시글이 복구되었습니다.");
     }
 }
+*/

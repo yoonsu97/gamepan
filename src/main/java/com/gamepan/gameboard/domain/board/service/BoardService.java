@@ -9,6 +9,7 @@ import com.gamepan.gameboard.domain.post.service.PostService;
 import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
+import com.gamepan.gameboard.global.help.AuthorizationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class BoardService {
     private final PostRepository postRepository;
     private final PostService postService;
     private final UserRepository userRepository;
+    private final AuthorizationService authorizationService;
 
 
     // 게시판 생성 (중복 검사)
@@ -77,11 +79,6 @@ public class BoardService {
         }
         board.softDelete();
 
-        List<Post> posts = postRepository.findAllByBoardId(id);
-
-        for (Post post : posts) {
-            postService.softDeletePost(post.getId(),currentUserId);
-        }
         boardRepository.save(board);
     }
 
@@ -95,11 +92,7 @@ public class BoardService {
         }
 
         board.restore(); // 게시판 및 하위 게시글 복구
-        List<Post> posts = postRepository.findAllByBoardId(id);
 
-        for (Post post : posts) {
-            postService.restorePost(post.getId());
-        }
         boardRepository.save(board);
     }
 }
