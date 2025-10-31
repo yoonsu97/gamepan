@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content)">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle} ?: '관리자 페이지'">관리자 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+</head>
+
+<body>
+<!-- 🔹 공통 헤더 -->
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<!-- 🔹 전체 관리자 레이아웃 -->
+<div class="admin-container">
+    <!-- 왼쪽 사이드바 -->
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
+    <!-- 오른쪽 본문 -->
+    <div class="admin-content" th:replace="${content}"></div>
+</div>
+</body>
+</html>

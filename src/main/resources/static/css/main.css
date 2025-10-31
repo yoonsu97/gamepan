@@ -1,29 +1,196 @@
+/* ========== 기본 ========== */
+body {
+    background: #fafafa;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #111;
+    margin: 0;
+}
 
-.section { padding: 24px 0; }
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 16px;
+}
 
-.board { margin-bottom: 32px; }
-.board-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
-.board-title { font-size: 20px; font-weight: 700; }
+/* ========== 게시판 전체 (자동 2열 배치) ========== */
+.board-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+}
 
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
-@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+/* ========== 개별 게시판 ========== */
+.board {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+}
+
+.board-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.more {
+    color: #777;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+.more:hover {
+    color: #6b4eff;
+}
+
+/* ========== 카드 (2×2 고정) ========== */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 14px;
+    margin-bottom: 20px;
+}
 
 .card {
-    border: 1px solid #eee;
-    border-radius: 12px;
-    padding: 14px;
     background: #fff;
-    transition: box-shadow .15s ease;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
 }
-.card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.06); }
+.card:hover {
+    transform: translateY(-3px);
+}
 
-.card .title {
+.no-thumbnail {
+    background: #f5f5f5;
+    color: #aaa;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.card-body {
+    padding: 12px;
+}
+
+.card-body .title {
+    display: block;
+    text-decoration: none;
+    color: #333;
     font-weight: 600;
-    margin: 0 0 8px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 6px;
+}
+.card-body .title:hover {
+    color: #6b4eff;
 }
 
-.meta { font-size: 12px; color: #777; display: flex; gap: 10px; }
-.more { font-size: 14px; color: #555; text-decoration: none; }
-.more:hover { text-decoration: underline; }
+.meta {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* ========== 게시글 목록 (하단) ========== */
+.post-list-section {
+    margin-top: 10px;
+}
+
+.list-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 6px;
+}
+
+.list-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #444;
+}
+
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.post-list li:last-child {
+    border-bottom: none;
+}
+
+.post-list a {
+    text-decoration: none;
+    color: #333;
+    font-size: 0.95rem;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.post-list a:hover {
+    color: #6b4eff;
+}
+
+.post-list .post-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #777;
+    white-space: nowrap;
+}
+
+.post-list .like,
+.post-list .comment {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.post-list .date {
+    color: #888;
+}
+
+.post-list .empty {
+    color: #999;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* ========== 반응형 ========== */
+@media (max-width: 768px) {
+    .board-grid {
+        grid-template-columns: 1fr;
+    }
+    .post-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========== 푸터 ========== */
+.footer {
+    text-align: center;
+    color: #777;
+    font-size: 0.85rem;
+    margin: 60px 0 30px;
+}

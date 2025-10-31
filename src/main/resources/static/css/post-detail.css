@@ -112,13 +112,18 @@ button.btn:hover {
     margin-bottom: 10px;
 }
 
+/* 🔹 본문: 줄바꿈 & 가독성 향상 */
 .post-content {
     margin-top: 20px;
-    line-height: 1.6;
+    line-height: 1.75;              /* 줄 간격 살짝 여유 */
     font-size: 1rem;
-    white-space: pre-line;
+    color: #333;
+    white-space: pre-line;          /* ✅ 엔터 줄바꿈 반영 */
+    word-break: break-word;         /* 긴 단어 자동 줄바꿈 */
+    letter-spacing: 0.2px;          /* 살짝 자간 */
 }
 
+/* ========== 좋아요 버튼 ========== */
 .like-btn {
     display: flex;
     justify-content: center;
@@ -212,11 +217,13 @@ button.btn:hover {
     border-radius: 6px;
 }
 
-/* 댓글 내용 */
+/* 🔹 댓글 내용: 줄바꿈 반영 + 가독성 향상 */
 .comment-content {
     margin-top: 4px;
     font-size: 0.95rem;
     color: #333;
+    white-space: pre-line;          /* ✅ 댓글 줄바꿈 반영 */
+    line-height: 1.6;
 }
 
 /* ========== 댓글 입력 영역 (textarea 버전) ========== */

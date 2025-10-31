@@ -1,50 +1,80 @@
-<!-- src/main/resources/templates/index.html -->
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>gamepan</title>
+    <meta charset="UTF-8">
+    <title>GamePan 메인</title>
     <link rel="stylesheet" th:href="@{/css/header.css}" />
-    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
+
+<!-- 🔹 헤더 -->
 <div th:replace="~{fragments/header :: siteHeader}"></div>
 
 <main class="container">
-    <section class="section" th:if="${#lists.isEmpty(boards)}">
-        아직 생성된 게시판이 없습니다.
-    </section>
 
-    <section class="section" th:each="board : ${boards}" th:if="${!#lists.isEmpty(boards)}"
-             th:with="posts=${postsByBoard[board.id]}">
-        <div class="board">
+    <!-- ✅ 게시판 전체 -->
+    <section class="board-grid" th:if="${boards != null}">
+        <div class="board" th:each="board : ${boards}">
             <div class="board-header">
-                <div class="board-title" th:text="${board.name}">게시판 이름</div>
-                <a class="more" th:href="@{'/boards/' + ${board.id}+'/posts'}">더보기 ▸</a>
+                <h3 th:text="${board.name}">게시판 이름</h3>
+                <a th:href="@{'/boards/' + ${board.id} + '/posts'}" class="more">더보기 ▸</a>
             </div>
 
-            <div class="grid">
-                <!-- 게시판별 최신 글 목록 -->
-                <div class="card" th:each="post : ${posts}" th:if="${!#lists.isEmpty(posts)}">
-                    <a th:href="@{'/boards/' + ${board.id} + '/posts/' + ${post.id}}">
-                        <h4 class="title" th:text="${post.title}">게시글 제목</h4>
-                    </a>
-                    <div class="meta">
-                        <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd HH:mm')}">날짜</span>
-                        <span th:text="'조회 ' + ${post.viewCount}">조회수</span>
-                        <span th:text="'좋아요 ' + ${post.likeCount}">좋아요</span>
+            <!-- ✅ 카드 2x2 고정 -->
+            <div class="post-grid"
+                 th:with="posts=${postsByBoard != null ? postsByBoard[board.id] : {}}">
+                <div class="card"
+                     th:each="post, iterStat : ${posts}"
+                     th:if="${iterStat.index < 4}">
+                    <div class="no-thumbnail">이미지 없음</div>
+                    <div class="card-body">
+                        <a class="title"
+                           th:href="@{'/boards/' + ${board.id} + '/posts/' + ${post.id}}"
+                           th:text="${post.title}">게시글 제목</a>
+                        <div class="meta">
+                            <span th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2025.10.31</span>
+                            · <span th:text="'조회 ' + ${post.viewCount}">조회수</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 글이 없을 때 -->
-                <div class="card" th:if="${#lists.isEmpty(posts)}">
-                    <div>아직 등록된 글이 없습니다.</div>
+                <!-- 게시글이 없는 경우 -->
+                <div class="card empty" th:if="${#lists.isEmpty(posts)}">
+                    <div class="no-thumbnail">게시글 없음</div>
+                    <div class="card-body"><span>등록된 게시글이 없습니다.</span></div>
                 </div>
+            </div>
+
+            <!-- ✅ 하단 최신 게시글 목록 (❤️, 💬 포함) -->
+            <div class="post-list-section">
+                <div class="list-header"><span class="list-title">최신 게시글</span></div>
+                <ul class="post-list"
+                    th:with="recentPosts=${postsByBoard != null ? postsByBoard[board.id] : {}}">
+                    <li th:each="post, iterStat : ${recentPosts}" th:if="${iterStat.index < 5}">
+                        <a th:href="@{'/boards/' + ${board.id} + '/posts/' + ${post.id}}"
+                           th:text="${post.title}">게시글 제목</a>
+                        <div class="post-info">
+                            <span class="like">❤️ <span th:text="${post.likeCount}">0</span></span>
+                            <span class="comment">💬 <span th:text="${post.commentCount}">0</span></span>
+                            <span class="date" th:text="${#temporals.format(post.createdAt, 'MM.dd')}">10.31</span>
+                        </div>
+                    </li>
+                    <li th:if="${#lists.isEmpty(recentPosts)}" class="empty">등록된 게시글이 없습니다.</li>
+                </ul>
             </div>
         </div>
     </section>
+
+    <!-- 게시판 없을 때 -->
+    <section th:if="${#lists.isEmpty(boards)}">
+        <p class="text-muted text-center mt-5">아직 생성된 게시판이 없습니다.</p>
+    </section>
 </main>
+
+<footer>
+    <div class="footer">© 2025 GamePan Board. All rights reserved.</div>
+</footer>
+
 </body>
 </html>

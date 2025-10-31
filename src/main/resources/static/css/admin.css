@@ -1,5 +1,345 @@
-.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;background:#f3f4f6;padding:16px;border-radius:12px}
-.admin-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px}
-.admin-card h3{margin:0 0 8px}
-.admin-card ul{margin:0;padding-left:16px}
-.admin-enter-btn{margin-left:auto;padding:6px 10px;border:1px solid #111;border-radius:8px}
+/* ========== ADMIN LAYOUT ========== */
+.admin-container {
+    display: flex;
+    gap: 40px; /* 사이드바와 본문 사이 여백 */
+    align-items: flex-start;
+    margin-top: 40px;
+    padding: 0 40px;
+}
+
+/* 사이드바 */
+.admin-sidebar {
+    background: #f5f5f5;
+    padding: 20px;
+    width: 230px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.admin-sidebar h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.admin-sidebar ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.admin-sidebar li {
+    margin-bottom: 6px;
+}
+
+.admin-sidebar b {
+    display: block;
+    margin: 10px 0 5px;
+    color: #222;
+}
+
+.admin-sidebar a {
+    text-decoration: none;
+    color: #6b4eff;
+    font-size: 0.9rem;
+}
+
+.admin-sidebar a:hover {
+    text-decoration: underline;
+}
+
+.admin-content {
+    flex: 1;
+}
+
+/* ========== ADMIN CARD GRID (대시보드용) ========== */
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    background: #f3f4f6;
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.admin-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.admin-card h3 {
+    margin: 0 0 8px;
+}
+
+.admin-card ul {
+    margin: 0;
+    padding-left: 16px;
+}
+
+.admin-enter-btn {
+    margin-left: auto;
+    padding: 6px 10px;
+    border: 1px solid #111;
+    border-radius: 8px;
+}
+
+/* ========== FORM (게시판 수정 / 생성 등) ========== */
+.admin-form {
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+.btn-save {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.btn-save:hover {
+    background: #059669;
+}
+
+.btn-cancel {
+    margin-left: 10px;
+    color: #1e3a8a;
+    text-decoration: none;
+}
+.btn-cancel:hover {
+    text-decoration: underline;
+}
+
+/* ========== 공통 버튼 ========== */
+.btn-restore {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-restore:hover {
+    background: #1e40af;
+}
+
+.btn-edit {
+    background: #facc15;
+    color: #111;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+.btn-edit:hover {
+    background: #eab308;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: 0.2s;
+}
+.btn-delete:hover {
+    background: #dc2626;
+}
+
+/* ========== 게시판 관리 페이지 ========== */
+.admin-board-page {
+    /* ✅ 수정됨: 시원하게 넓게 + 배경 강조 */
+    background: #f9fbff; /* 살짝 푸른톤 배경 */
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    max-width: 1150px; /* 기존 width: 90% → 고정 폭 */
+    margin: 30px auto;
+}
+
+/* 페이지 헤더 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 10px;
+}
+
+.page-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1f2937;
+    letter-spacing: -0.5px;
+}
+
+/* 생성 버튼 */
+.btn-create {
+    background: #2563eb;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.btn-create:hover {
+    background: #1d4ed8;
+}
+
+/* 메시지 */
+.alert-message {
+    background: #e0f2fe;
+    border-left: 5px solid #0284c7;
+    padding: 14px 18px;
+    color: #075985;
+    margin-bottom: 25px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+/* 테이블 */
+.board-table-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    overflow-x: auto;
+    padding: 20px;
+}
+
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.board-table th {
+    background: #dbeafe; /* ✅ 수정: 하늘색 헤더 */
+    color: #111827;
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 2px solid #93c5fd;
+    font-weight: 600;
+}
+
+.board-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.board-table tr:hover {
+    background: #f1f5f9;
+    transition: 0.15s;
+}
+
+.empty-message {
+    text-align: center;
+    color: #9ca3af;
+    padding: 30px 0;
+    font-size: 1rem;
+}
+/* ========== 게시판 테이블 정렬 개선 ========== */
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center; /* ✅ 모든 열 중앙 정렬 */
+    table-layout: fixed; /* ✅ 균등 분할 */
+}
+
+.board-table th,
+.board-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+/* ✅ 헤더 스타일 */
+.board-table th {
+    background: #e8f0fe;
+    color: #1e293b;
+    font-weight: 700;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+/* ✅ hover 효과 */
+.board-table tr:hover {
+    background: #f8fafc;
+    transition: 0.2s ease;
+}
+
+/* ✅ 버튼 정렬 */
+.board-table td:last-child,
+.board-table td:nth-last-child(2) {
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* ✅ 버튼 간격 균등 */
+.btn-edit,
+.btn-delete {
+    width: 60px;
+    display: inline-block;
+    text-align: center;
+}
+
+/* ✅ “게시판 관리” 영역 전체 정렬 보정 */
+.admin-board-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #f9fbff;
+    padding: 50px 60px;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    flex: 1;
+    max-width: 1150px;
+    margin: 40px auto;
+}
+
+/* ✅ “게시판 관리” 상단 헤더 여백 정리 */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.page-header h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.5px;
+}
