@@ -1,62 +1,53 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>게시판 관리</title>
-    <link rel="stylesheet" th:href="@{/css/header.css}" />
-    <link rel="stylesheet" th:href="@{/css/admin-user.css}">
-</head>
-<body>
-<div th:replace="~{fragments/header :: siteHeader}"></div>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout(~{::content})}">
 
-<h2>게시판 관리</h2>
+<div th:fragment="content" class="admin-board-page">
 
-<div th:if="${message}" style="color:#065f46; font-weight:600; margin-bottom:10px;" th:text="${message}"></div>
-
-<form id="deleteForm" method="post">
-    <div class="toolbar">
-        <a th:href="@{/admin/boards/new}" class="primary"
-           style="text-decoration:none; padding:7px 12px; border-radius:6px;">게시판 생성</a>
+    <div class="page-header">
+        <h2>게시판 관리</h2>
+        <a th:href="@{/admin/boards/new}" class="btn-create">+ 새 게시판</a>
     </div>
 
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>이름</th>
-            <th>코드</th>
-            <th>설명</th>
-            <th>수정</th>
-            <th>삭제</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="b : ${boards}">
-            <td th:text="${b.id}">1</td>
-            <td th:text="${b.name}">자유게시판</td>
-            <td th:text="${b.code}">FREE</td>
-            <td th:text="${b.description}">자유롭게 글을 써보세요</td>
+    <div th:if="${message}" class="alert-message" th:text="${message}"></div>
 
-            <!-- 수정 버튼 -->
-            <td>
-                <a th:href="@{'/admin/boards/' + ${b.id} + '/edit'}">수정</a>
-            </td>
+    <div class="board-table-wrapper">
+        <table class="board-table">
+            <thead>
+            <tr>
+                <th style="width: 70px;">ID</th>
+                <th style="width: 180px;">이름</th>
+                <th style="width: 180px;">코드</th>
+                <th>설명</th>
+                <th style="width: 100px;">수정</th>
+                <th style="width: 100px;">삭제</th>
+            </tr>
+            </thead>
 
-            <!-- ✅ 삭제 버튼 (개별 삭제) -->
-            <td>
-                <form th:action="@{'/admin/boards/' + ${b.id} + '/delete'}" method="post"
-                      style="display:inline;"
-                      onsubmit="return confirm('게시판을 삭제하시겠습니까?');">
-                    <button type="submit" class="primary" style="background:#b91c1c; border-color:#b91c1c;">삭제</button>
-                </form>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(boards)}">
-            <td colspan="6">표시할 게시판이 없습니다.</td>
-        </tr>
-        </tbody>
-    </table>
-</form>
+            <tbody>
+            <tr th:each="b : ${boards}">
+                <td th:text="${b.id}">1</td>
+                <td th:text="${b.name}">자유게시판</td>
+                <td th:text="${b.code}">FREE</td>
+                <td th:text="${b.description}">자유롭게 글을 써보세요</td>
+                <td>
+                    <a th:href="@{'/admin/boards/' + ${b.id} + '/edit'}" class="btn-edit">수정</a>
+                </td>
+                <td>
+                    <form th:action="@{'/admin/boards/' + ${b.id} + '/delete'}"
+                          method="post"
+                          onsubmit="return confirm('게시판을 삭제하시겠습니까?');">
+                        <button type="submit" class="btn-delete">삭제</button>
+                    </form>
+                </td>
+            </tr>
 
-</body>
+            <tr th:if="${#lists.isEmpty(boards)}">
+                <td colspan="6" class="empty-message">등록된 게시판이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
 </html>

@@ -1,47 +1,47 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>삭제된 게시판 관리</title>
-    <link rel="stylesheet" th:href="@{/css/header.css}" />
-    <link rel="stylesheet" th:href="@{/css/admin-user.css}">
-</head>
-<body>
-<div th:replace="~{fragments/header :: siteHeader}"></div>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout(~{::content})}">
 
-<h2>삭제된 게시판 관리</h2>
+<div th:fragment="content" class="admin-board-page">
 
-<div th:if="${message}" style="color:#065f46; font-weight:600; margin-bottom:10px;" th:text="${message}"></div>
+    <div class="page-header">
+        <h2>삭제된 게시판 관리</h2>
+    </div>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>이름</th>
-        <th>코드</th>
-        <th>설명</th>
-        <th>복구</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="b : ${boards}">
-        <td th:text="${b.id}">1</td>
-        <td th:text="${b.name}">자유게시판</td>
-        <td th:text="${b.code}">FREE</td>
-        <td th:text="${b.description}">자유롭게 글을 써보세요</td>
-        <td>
-            <form th:action="@{'/admin/deletedBoards/' + ${b.id} + '/restore'}" method="post"
-                  style="display:inline;"
-                  onsubmit="return confirm('게시판을 복구하시겠습니까?');">
-                <button type="submit" class="primary">복구</button>
-            </form>
-        </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(boards)}">
-        <td colspan="5">삭제된 게시판이 없습니다.</td>
-    </tr>
-    </tbody>
-</table>
+    <div th:if="${message}" class="alert-message" th:text="${message}"></div>
 
-</body>
+    <div class="board-table-wrapper">
+        <table class="board-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>코드</th>
+                <th>설명</th>
+                <th>복구</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${boards}">
+                <td th:text="${b.id}">1</td>
+                <td th:text="${b.name}">자유게시판</td>
+                <td th:text="${b.code}">FREE</td>
+                <td th:text="${b.description}">자유롭게 글을 써보세요</td>
+                <td>
+                    <form th:action="@{'/admin/deletedBoards/' + ${b.id} + '/restore'}"
+                          method="post"
+                          onsubmit="return confirm('게시판을 복구하시겠습니까?');">
+                        <button type="submit" class="btn-restore">복구</button>
+                    </form>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(boards)}">
+                <td colspan="5" class="empty-message">삭제된 게시판이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
 </html>

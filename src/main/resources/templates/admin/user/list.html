@@ -1,58 +1,53 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>회원 관리</title>
-    <link rel="stylesheet" th:href="@{/css/header.css}" />
-    <link rel="stylesheet" th:href="@{/css/admin-user.css}" />
-</head>
-<body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout(~{::content})}">
 
-<div th:replace="~{fragments/header :: siteHeader}"></div>
+<!-- ✅ layout()으로 전달되는 영역 -->
+<th:block th:fragment="content">
+    <div class="admin-board-page">
+        <h2>회원 관리</h2>
 
-<h2>회원 관리</h2>
+        <div th:if="${message}"
+             style="color:#065f46; font-weight:600; margin-bottom:10px;"
+             th:text="${message}"></div>
 
-<div th:if="${message}" style="color:#065f46; font-weight:600; margin-bottom:10px;" th:text="${message}"></div>
+        <form th:action="@{/admin/users/delete}" method="post" id="deleteForm">
+            <div class="toolbar">
+                <button type="button" onclick="toggleAll(true)">전체선택</button>
+                <button type="button" onclick="toggleAll(false)">해제</button>
+                <button type="submit" class="primary"
+                        onclick="return confirm('선택한 회원을 삭제하시겠습니까?')">선택 삭제</button>
+                <span class="right" id="selectedCount">선택 0명</span>
+            </div>
 
-<form th:action="@{/admin/users/delete}" method="post" id="deleteForm">
-    <!-- CSRF를 켜지 않았다면 이 input은 없어도 됩니다. 켠 경우를 대비해 널-세이프 -->
-    <!--<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+            <table>
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="checkAll" onclick="onCheckAll(this)"></th>
+                    <th>ID</th>
+                    <th>아이디</th>
+                    <th>닉네임</th>
+                    <th>이메일</th>
+                    <th>생성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td><input type="checkbox" name="userIds" th:value="${u.id}" class="rowCheck" onclick="updateCount()"></td>
+                    <td th:text="${u.id}">1</td>
+                    <td th:text="${u.username}">admin</td>
+                    <td th:text="${u.nickname}">관리자</td>
+                    <td th:text="${u.email}">admin@example.com</td>
+                    <td th:text="${#temporals.format(u.createdAt, 'yyyy-MM-dd HH:mm')}">2025-10-28 14:29</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="6">표시할 회원이 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
 
-    <div class="toolbar">
-        <button type="button" onclick="toggleAll(true)">전체선택</button>
-        <button type="button" onclick="toggleAll(false)">해제</button>
-        <button type="submit" class="primary"
-                onclick="return confirm('선택한 회원을 삭제하시겠습니까?')">선택 삭제</button>
-        <span class="right" id="selectedCount">선택 0명</span>
+        <script th:src="@{/js/admin-user.js}"></script>
     </div>
-
-    <table>
-        <thead>
-        <tr>
-            <th><input type="checkbox" id="checkAll" onclick="onCheckAll(this)"></th>
-            <th>ID</th>
-            <th>아이디</th>
-            <th>닉네임</th>
-            <th>이메일</th>
-            <th>생성일</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="u : ${users}">
-            <td><input type="checkbox" name="userIds" th:value="${u.id}" class="rowCheck" onclick="updateCount()"></td>
-            <td th:text="${u.id}">1</td>
-            <td th:text="${u.username}">admin</td>
-            <td th:text="${u.nickname}">관리자</td>
-            <td th:text="${u.email}">admin@example.com</td>
-            <td th:text="${#temporals.format(u.createdAt, 'yyyy-MM-dd HH:mm')}">2025-10-28 14:29</td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(users)}">
-            <td colspan="6">표시할 회원이 없습니다.</td>
-        </tr>
-        </tbody>
-    </table>
-</form>
-
-<script th:src="@{/js/admin-user.js}"></script>
-</body>
+</th:block>
 </html>

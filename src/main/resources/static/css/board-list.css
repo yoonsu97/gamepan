@@ -1,0 +1,167 @@
+/* ========== 게시판 목록 전용 스타일 ========== */
+
+/* 전체 배경 */
+body.bg-light {
+    background-color: #f8f9fa;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 게시판 제목 */
+.container h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* 게시판 설명 */
+.container p {
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+/* 검색 폼 */
+form.d-flex input[type="search"] {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 8px 12px;
+}
+
+form.d-flex button {
+    border-radius: 8px;
+}
+
+/* 글쓰기 버튼 */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* 테이블 전체 */
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+    border: none;
+}
+
+/* 헤더 */
+.table thead {
+    background-color: #007bff !important;
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+
+/* 셀 */
+.table td, .table th {
+    vertical-align: middle;
+    padding: 14px 12px;
+}
+
+/* 제목 링크 */
+.table a {
+    text-decoration: none;
+    color: #212529;
+    font-weight: 500;
+}
+
+.table a:hover {
+    color: #007bff;
+}
+
+/* hover 효과 */
+.table-hover tbody tr:hover {
+    background-color: #f1f3f5;
+    transition: background 0.2s ease-in-out;
+}
+
+/* 게시글 없을 때 */
+.table td[colspan="6"] {
+    color: #adb5bd;
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* 푸터 */
+footer {
+    background-color: #fff;
+    border-top: 1px solid #dee2e6;
+    padding: 20px 0;
+    color: #6c757d;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* ========== 검색창 내 돋보기 아이콘 ========== */
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 260px; /* 기존보다 살짝 좁혀도 자연스럽게 */
+}
+
+.search-bar input[type="search"] {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 8px 36px 8px 12px; /* 오른쪽에 버튼 자리 확보 */
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.search-bar input[type="search"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+/* 돋보기 버튼 */
+.search-bar button {
+    position: absolute;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.1rem;
+    transition: color 0.2s ease-in-out;
+}
+
+.search-bar button:hover {
+    color: #007bff;
+}
+
+/* ============================
+   🔹 게시판 목록 상단 간격 보정 (헤더와 게시판 이름이 너무 붙는 문제)
+   ============================ */
+body {
+    padding-top: 80px; /* ✅ sticky header 아래 전체 여백 확보 */
+}
+
+.board-header-area {
+    margin-top: 30px;      /* ✅ 헤더와 게시판 이름 간격 */
+    margin-bottom: 24px;   /* 제목과 검색창 사이 간격 */
+}
+
+.board-header-area h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.board-header-area p {
+    font-size: 0.95rem;
+    color: #666;
+}
