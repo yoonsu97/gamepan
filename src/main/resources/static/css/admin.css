@@ -14,6 +14,8 @@
     width: 230px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transform: translate(120px, 35px);
+    flex-shrink: 0;
 }
 
 .admin-sidebar h3 {
@@ -49,7 +51,8 @@
 }
 
 .admin-content {
-    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
 /* ========== ADMIN CARD GRID (대시보드용) ========== */
@@ -136,6 +139,19 @@
 }
 
 /* ========== 공통 버튼 ========== */
+.btn-create {
+    display: inline-block;
+    background: #2563eb;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+.btn-create:hover {
+    background: #1d4ed8;
+}
 .btn-restore {
     background: #2563eb;
     color: white;
@@ -177,191 +193,164 @@
     background: #dc2626;
 }
 
-/* ========== 게시판 관리 페이지 ========== */
-.admin-board-page {
-    /* ✅ 수정됨: 시원하게 넓게 + 배경 강조 */
-    background: #f9fbff; /* 살짝 푸른톤 배경 */
-    padding: 40px 50px;
-    border-radius: 12px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-    flex: 1;
-    max-width: 1150px; /* 기존 width: 90% → 고정 폭 */
-    margin: 30px auto;
-}
-
-/* 페이지 헤더 */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 10px;
-}
-
-.page-header h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #1f2937;
-    letter-spacing: -0.5px;
-}
-
-/* 생성 버튼 */
-.btn-create {
-    background: #2563eb;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.2s;
-}
-.btn-create:hover {
-    background: #1d4ed8;
-}
-
-/* 메시지 */
-.alert-message {
-    background: #e0f2fe;
-    border-left: 5px solid #0284c7;
-    padding: 14px 18px;
-    color: #075985;
-    margin-bottom: 25px;
-    border-radius: 6px;
-    font-size: 0.95rem;
-}
-
-/* 테이블 */
-.board-table-wrapper {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    overflow-x: auto;
-    padding: 20px;
-}
-
-.board-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-.board-table th {
-    background: #dbeafe; /* ✅ 수정: 하늘색 헤더 */
-    color: #111827;
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 2px solid #93c5fd;
-    font-weight: 600;
-}
-
-.board-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.board-table tr:hover {
-    background: #f1f5f9;
-    transition: 0.15s;
-}
-
-.empty-message {
-    text-align: center;
-    color: #9ca3af;
-    padding: 30px 0;
-    font-size: 1rem;
-}
-/* ========== 게시판 테이블 정렬 개선 ========== */
-.board-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center; /* ✅ 모든 열 중앙 정렬 */
-    table-layout: fixed; /* ✅ 균등 분할 */
-}
-
-.board-table th,
-.board-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid #e5e7eb;
-    vertical-align: middle;
-}
-
-/* ✅ 헤더 스타일 */
-.board-table th {
-    background: #e8f0fe;
-    color: #1e293b;
-    font-weight: 700;
-    border-bottom: 2px solid #cbd5e1;
-}
-
-/* ✅ hover 효과 */
-.board-table tr:hover {
-    background: #f8fafc;
-    transition: 0.2s ease;
-}
-
-/* ✅ 버튼 정렬 */
-.board-table td:last-child,
-.board-table td:nth-last-child(2) {
-    text-align: center;
-    white-space: nowrap;
-}
-
-/* ✅ 버튼 간격 균등 */
-.btn-edit,
-.btn-delete {
-    width: 60px;
-    display: inline-block;
-    text-align: center;
-}
-
-/* ✅ “게시판 관리” 영역 전체 정렬 보정 */
-.admin-board-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+/* ==========================================================
+   ✅ 게시판관리 + 회원관리 + 신고관리 + 삭제회원관리 통합 스타일
+   ========================================================== */
+.admin-board-page,
+.admin-user-page,
+.admin-report-page,
+.admin-deleted-page {
     background: #f9fbff;
-    padding: 50px 60px;
+    padding: 20px 30px;
     border-radius: 14px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.05);
     flex: 1;
     max-width: 1150px;
     margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* ✅ “게시판 관리” 상단 헤더 여백 정리 */
-.page-header {
+/* ✅ 페이지 헤더 공통 */
+.admin-board-page .page-header,
+.admin-user-page .page-header,
+.admin-report-page .page-header,
+.admin-deleted-page .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 10px;
 }
-.page-header h2 {
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #111827;
+
+.admin-board-page .page-header h2,
+.admin-user-page .page-header h2,
+.admin-report-page .page-header h2,
+.admin-deleted-page .page-header h2 {
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
     letter-spacing: -0.5px;
+    line-height: 1.4;
 }
 
-/* ✅ 레이아웃 전체를 column 기반으로 변경 */
-body {
-    min-height: 100vh;
-}
-
-/* ✅ 콘텐츠 영역이 화면의 나머지 공간을 차지하게 */
-.admin-container {
-    display: flex;
-    flex: 1; /* 사이드바 + 컨텐츠 높이를 body 안에서 확장 */
-}
-
-/* ✅ 푸터: 항상 하단 중앙 고정 */
-footer, .footer {
-    margin-top: auto;
+/* ✅ 테이블 공통 */
+.admin-board-page table,
+.admin-user-page table,
+.admin-report-page table,
+.admin-deleted-page table {
     width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    overflow-x: auto;
     text-align: center;
+}
+
+.admin-board-page th,
+.admin-user-page th,
+.admin-report-page th,
+.admin-deleted-page th {
+    background: #e8f0fe;
+    color: #1e293b;
+    font-weight: 700;
+    border-bottom: 2px solid #cbd5e1;
+    padding: 14px 16px;
+}
+
+.admin-board-page td,
+.admin-user-page td,
+.admin-report-page td,
+.admin-deleted-page td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-board-page tr:hover,
+.admin-user-page tr:hover,
+.admin-report-page tr:hover,
+.admin-deleted-page tr:hover {
+    background: #f8fafc;
+    transition: 0.2s ease;
+}
+
+/* ✅ 버튼 정렬 */
+.admin-board-page td:last-child,
+.admin-user-page td:last-child,
+.admin-report-page td:last-child,
+.admin-deleted-page td:last-child {
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* ✅ 관리자 페이지 제목 폰트 사이즈 통일 (게시판 관리 기준) */
+.admin-board-page h2,
+.admin-user-page h2,
+.admin-report-page h2,
+.admin-deleted-page h2 {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    letter-spacing: -0.5px !important;
+    line-height: 1.3 !important;
+    margin-bottom: 20px !important;
+}
+
+/* ==========================================================
+   🧩 게시판 생성/수정 폼(new, edit) 전용 정렬 보정 (최종)
+   ========================================================== */
+.admin-board-form-page {
+    flex: none !important;
+    width: 100%;
+    max-width: 900px; /* 📏 폼 폭 제한 */
+    margin-left: 10px;
+    background: #f9fbff;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    padding: 40px 50px !important;
+
+    /* ✅ 수정: 사이드바 오른쪽으로 밀기 */
+    transform: translate(120px, 20px);
+}
+
+.admin-board-form-page label {
+    display: block !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 6px !important;
+    text-align: left !important;
+}
+
+.admin-board-form-page input,
+.admin-board-form-page textarea {
+    width: 100% !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+    font-size: 1rem !important;
+    background-color: #fff !important;
+    margin-bottom: 18px !important;
+    box-sizing: border-box !important;
+}
+
+/* ==========================================================
+   ✅ 관리자 푸터 완전 중앙 고정 (flex 영향 완전 차단)
+   ========================================================== */
+footer, .footer {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
     background-color: #f9f9f9;
     color: #555;
+    text-align: center;
     padding: 20px 0;
     border-top: 1px solid #eee;
+    box-sizing: border-box;
+    z-index: 999;
 }
+body { padding-bottom: 80px; }
