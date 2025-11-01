@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/admin-layout :: layout(~{::content})}">
+<!-- ↑ admin-layout.html의 layout(content) fragment에 현재 페이지의 content를 전달 -->
 
-<h2>게시판 수정</h2>
+<th:block th:fragment="content">
+    <h2>게시판 수정</h2>
 
-<form th:action="@{'/admin/boards/' + ${board.id} + '/update'}" method="post" class="admin-form">
-    <div class="form-group">
-        <label>게시판 이름</label>
-        <input type="text" name="name" th:value="${board.name}" required>
-    </div>
-
-    <div class="form-group">
-        <label>게시판 코드</label>
-        <input type="text" name="code" th:value="${board.code}" required>
-    </div>
-
-    <div class="form-group">
-        <label>설명</label>
-        <textarea name="description" rows="3" th:text="${board.description}"></textarea>
-    </div>
-
-    <div class="form-actions">
-        <button type="submit" class="btn-save">수정</button>
-        <a th:href="@{/admin/boards/list}" class="btn-cancel">취소</a>
-    </div>
-</form>
-
+    <form th:action="@{'/admin/boards/' + ${board.id} + '/update'}" method="post">
+        <div>
+            <label>게시판 이름:</label><br>
+            <input type="text" name="name" th:value="${board.name}" required>
+        </div>
+        <div>
+            <label>게시판 코드:</label><br>
+            <input type="text" name="code" th:value="${board.code}" required>
+        </div>
+        <div>
+            <label>설명:</label><br>
+            <textarea name="description" th:text="${board.description}" rows="3"></textarea>
+        </div>
+        <br>
+        <button type="submit" class="primary">수정</button>
+        <a th:href="@{/admin/boards}">취소</a>
+    </form>
+</th:block>
 </html>

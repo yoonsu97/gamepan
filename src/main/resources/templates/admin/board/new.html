@@ -1,29 +1,27 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>게시판 생성</title>
-    <link rel="stylesheet" th:href="@{/css/admin.css}">
-</head>
-<body>
-<h2>게시판 생성</h2>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/admin-layout :: layout(~{::content})}">
+<!-- ↑ admin-layout.html의 layout(content) fragment를 불러오고, 현재 페이지의 content를 전달 -->
 
-<form th:action="@{/admin/boards/create}" method="post">
-    <div>
-        <label>게시판 이름:</label><br>
-        <input type="text" name="name" required>
-    </div>
-    <div>
-        <label>게시판 코드:</label><br>
-        <input type="text" name="code" required placeholder="예: FREE, NOTICE">
-    </div>
-    <div>
-        <label>설명:</label><br>
-        <textarea name="description" rows="3"></textarea>
-    </div>
-    <br>
-    <button type="submit" class="primary">생성</button>
-    <a th:href="@{/admin/boards}">취소</a>
-</form>
-</body>
+<th:block th:fragment="content">
+    <h2>게시판 생성</h2>
+
+    <form th:action="@{/admin/boards/create}" method="post">
+        <div>
+            <label>게시판 이름:</label><br>
+            <input type="text" name="name" required>
+        </div>
+        <div>
+            <label>게시판 코드:</label><br>
+            <input type="text" name="code" required placeholder="예: FREE, NOTICE">
+        </div>
+        <div>
+            <label>설명:</label><br>
+            <textarea name="description" rows="3"></textarea>
+        </div>
+        <br>
+        <button type="submit" class="primary">생성</button>
+        <a th:href="@{/admin/boards}">취소</a>
+    </form>
+</th:block>
 </html>

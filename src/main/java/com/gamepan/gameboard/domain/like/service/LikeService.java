@@ -33,7 +33,7 @@ public class LikeService {
     @Transactional
     public ToggleResult toggleLike(Long postId, User user) {
         Post post = postRepository.findByIdAndIsDeletedFalse(postId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
         var existing = likeRepository.findByPost_IdAndUser_Id(postId, user.getId());
 

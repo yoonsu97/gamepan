@@ -42,16 +42,6 @@ public class CommentWebController {
         return "redirect:/boards/" + boardId + "/posts/" + postId;
     }
 
-    // 게시글별 댓글 조회
-    @GetMapping
-    public ResponseEntity<List<CommentResponseDto>> getCommentsByPost(@PathVariable Long postId) {
-        List<CommentResponseDto> comments = commentService.getCommentsByPost(postId)
-                .stream()
-                .map(CommentResponseDto::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(comments);
-    }
-
     // 댓글 수정
     @PostMapping("/{commentId}/edit")
     public String updateComment(@PathVariable Long boardId,

@@ -4,19 +4,19 @@
     <ul>
         <li><b>🗂 게시판/게시글 관리</b></li>
         <ul>
-            <li><a th:href="@{/admin/boards/list}">게시판 목록 / 수정 / 삭제</a></li>
-            <li><a th:href="@{/admin/boards/deleted-list}">게시판 복구</a></li>
+            <li><a th:href="@{/admin/boards}">게시판 목록 / 수정 / 삭제</a></li>
+            <li><a th:href="@{/admin/deletedBoards}">게시판 복구</a></li>
         </ul>
 
-        <li><b>👥 회원 관리</b></li>
+        <li><b>👥 사용자 관리</b></li>
         <ul>
-            <li><a th:href="@{/admin/user/list}">회원 조회</a></li>
-            <li><a th:href="@{/admin/user/deleted-list}">삭제된 회원 목록 (복구용)</a></li>
+            <li><a th:href="@{/admin/users}">사용자 목록</a></li>
+            <li><a th:href="@{/admin/deletedUsers}">사용자 복구</a></li>
         </ul>
 
         <li><b>🚨 신고 관리</b></li>
         <ul>
-            <li><a th:href="@{/admin/report/report-post-list}">신고 게시글 목록</a></li>
+            <li><a th:href="@{/admin/reports/posts}">신고 게시글 목록</a></li>
         </ul>
     </ul>
 </div>
