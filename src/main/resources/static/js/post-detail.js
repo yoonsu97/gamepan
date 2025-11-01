@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ===== 좋아요 토글 =====
     const likeButton = document.getElementById("likeButton");
-    const likeCount  = document.getElementById("likeCount");
 
     if (likeButton) {
         likeButton.addEventListener("click", async function () {
@@ -32,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
-                // 서버가 redirect/HTML 반환 → 새로고침으로 반영
+                // redirect/HTML 응답 → 새로고침으로 반영
                 location.reload();
             } catch (e) {
                 alert("서버 오류가 발생했습니다.");

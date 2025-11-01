@@ -1,37 +1,59 @@
-:root { --gap: 16px; }
+/* ===== 공통 변수 ===== */
+:root {
+    --gap: 16px;
+    --header-h: 64px;        /* 💡 헤더 높이 고정 */
+}
 
+/* 권장: 전역 박스사이징 */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* ===== 바디 기본 ===== */
 body {
     margin: 0;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     color: #111;
 }
 
+/* 첫 요소 상단 마진 겹침 방지 (페이지마다 헤더 아래 여백 들쭉날쭉 방지) */
+.container > :first-child { margin-top: 0; }
+
+/* ===== 레이아웃 컨테이너 ===== */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 16px;
 }
 
-/* 헤더 / 네비게이션 */
+/* ===== 헤더 / 네비게이션 ===== */
 .header {
-    position: sticky;
+    position: sticky;     /* 스크롤해도 상단 고정 */
     top: 0;
     background: #fff;
     border-bottom: 1px solid #eee;
     z-index: 100;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
 }
 
 /* 브랜드와 우측 메뉴를 양끝 정렬 */
-.nav,
 .header .container.nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 64px;
+    justify-content: space-between;  /* 💡 왼쪽: brand / 오른쪽: nav-right */
+    height: var(--header-h);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+/* 브랜드 */
 .brand {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 800;
     letter-spacing: 1px;
     color: #222;
@@ -39,50 +61,60 @@ body {
     font-family: 'Poppins', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
     border-radius: 12px;
     padding: 4px 10px;
+    line-height: 1;
+    white-space: nowrap;
     transition: all 0.3s ease;
 }
-.brand:hover { background-color: #f3f3f3; transform: scale(1.05); }
-
-/* 우측 메뉴 컨테이너 */
+.brand:hover {
+    background-color: #f3f3f3;
+    transform: scale(1.05);
+}
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 10px;            /* 간격은 gap으로 통일 */
+    justify-content: flex-end; /* 💡 내부 버튼들은 오른쪽으로 붙음 */
+    gap: 10px;
+    flex-wrap: nowrap;
 }
 
-/* 링크 기본 색상 */
-.nav-right a {
-    text-decoration: none;
-    color: #111;
-}
-
-/* 버튼 공통: a/button/input 모두 동일 스타일 */
+/* 버튼 기본 스타일 */
 .btn,
+.header-btn,
 a.btn,
 button.btn,
 input[type="submit"].btn {
-    display: inline-flex;           /* ← 높이 통일 */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 36px;                   /* ← 고정 높이 */
-    padding: 0 12px;                /* ← 좌우 패딩만 */
+    height: 36px;
+    padding: 0 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background: #fff;
     color: #111;
     font-size: 14px;
-    line-height: 1;                 /* ← UA 기본 라인하이트 제거 */
     cursor: pointer;
     text-decoration: none;
-    -webkit-appearance: none;       /* ← 사파리 기본 스타일 제거 */
-    appearance: none;
+    transition: background 0.2s ease;
 }
+.btn:hover { background: #f7f7f7; }
+
+/* 폼 여백 제거 */
+.nav-right form {
+    margin: 0;
+    display: inline-block;
+}
+
 .btn:hover,
 a.btn:hover,
 button.btn:hover,
-input[type="submit"].btn:hover {
-    background: #f7f7f7;
-}
-/* 폼 자체 여백 제거 */
-.nav-right form { margin:0; display:inline-block; }
+input[type="submit"].btn:hover { background: #f7f7f7; }
 
+/* ===== 헤더 바로 아래 영역의 들쭉날쭉 여백 방지 보강 ===== */
+/* 페이지 첫 섹션이 큰 margin-top을 갖고 있으면 헤더 아래가 벌어져 보일 수 있음 */
+.main,
+.page,
+.container {
+    margin-top: 0;
+    padding-top: 0;
+}

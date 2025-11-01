@@ -20,22 +20,22 @@
                     user님
                 </span>
 
-                <a class="btn" th:href="@{/gamepan}">홈</a>
-                <a class="btn" th:href="@{/mypage}">마이페이지</a>
+                <a class="header-btn" th:href="@{/gamepan}">홈</a>
+                <a class="header-btn" th:href="@{/mypage}">마이페이지</a>
 
                 <form th:action="@{/logout}" method="post" style="display:inline;">
-                    <button type="submit" class="btn">로그아웃</button>
+                    <button type="submit" class="header-btn">로그아웃</button>
                 </form>
             </div>
 
             <!-- ✅ 비로그인 상태 -->
             <div sec:authorize="!isAuthenticated()">
-                <a class="btn" th:href="@{/gamepan}">홈</a>
-                <a class="btn" th:href="@{/login}">로그인</a>
+                <a class="header-btn" th:href="@{/gamepan}">홈</a>
+                <a class="header-btn" th:href="@{/login}">로그인</a>
             </div>
 
             <!-- 관리자 바: 관리자에게만 노출 -->
-            <a sec:authorize="hasRole('ADMIN')" class="admin-enter-btn" th:href="@{/admin}">
+            <a sec:authorize="hasRole('ADMIN')" class="btn" th:href="@{/admin}">
                 관리자
             </a>
         </div>
