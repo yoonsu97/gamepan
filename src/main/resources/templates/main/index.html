@@ -5,6 +5,7 @@
     <title>GamePan 메인</title>
     <link rel="stylesheet" th:href="@{/css/header.css}" />
     <link rel="stylesheet" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
 </head>
 <body>
 
@@ -72,9 +73,7 @@
     </section>
 </main>
 
-<footer>
-    <div class="footer">© 2025 GamePan Board. All rights reserved.</div>
-</footer>
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
 
 </body>
 </html>

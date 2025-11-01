@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Sign Up</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
 </head>
 <body>
 <h2>회원가입</h2>
@@ -54,6 +55,6 @@
         <a th:href="@{/login}">로그인으로 이동</a>
     </div>
 </form>
-
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
 </body>
 </html>

@@ -5,6 +5,7 @@
     <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/css/header.css}" />
     <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
 </head>
 <body>
 <div th:replace="~{fragments/header :: siteHeader}"></div>
@@ -94,5 +95,6 @@
         </table>
     </section>
 </main>
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
 </body>
 </html>

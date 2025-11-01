@@ -5,6 +5,7 @@
     <title th:text="${post.title}">게시글 상세</title>
     <link rel="stylesheet" th:href="@{/css/header.css}" />
     <link rel="stylesheet" th:href="@{/css/post-detail.css}" />
+    <link rel="stylesheet" th:href="@{/css/footer.css}" />
 </head>
 <body>
 <div th:replace="~{fragments/header :: siteHeader}"></div>
@@ -119,9 +120,7 @@
     </div>
 </main>
 
-<footer>
-    © 2025 GamePan | All rights reserved.
-</footer>
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
 
 <script src="/js/post-detail.js"></script>
 
