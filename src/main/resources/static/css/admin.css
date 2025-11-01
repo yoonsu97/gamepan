@@ -343,3 +343,25 @@
     color: #111827;
     letter-spacing: -0.5px;
 }
+
+/* ✅ 레이아웃 전체를 column 기반으로 변경 */
+body {
+    min-height: 100vh;
+}
+
+/* ✅ 콘텐츠 영역이 화면의 나머지 공간을 차지하게 */
+.admin-container {
+    display: flex;
+    flex: 1; /* 사이드바 + 컨텐츠 높이를 body 안에서 확장 */
+}
+
+/* ✅ 푸터: 항상 하단 중앙 고정 */
+footer, .footer {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+    background-color: #f9f9f9;
+    color: #555;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+}

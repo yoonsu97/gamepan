@@ -1,41 +1,39 @@
 .footer {
     width: 100%;
-    display: block; /* ✅ flex 영향 제거 */
-    background-color: #111;
-    color: #eee;
+    display: block;
+    background-color: #f9f9f9; /* 밝은 배경 */
+    color: #555;
     text-align: center;
     padding: 24px 0;
     font-size: 14px;
-    border-top: 1px solid #333;
+    border-top: 1px solid #eee;
     margin-top: 40px;
     position: relative;
     z-index: 10;
 }
 
-/* ✅ 내부를 가운데로 고정 */
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: center; /* ✅ flex 중앙정렬 */
+    align-items: center;
     justify-content: center;
     text-align: center;
 }
-
 
 .footer-links {
     margin-top: 8px;
 }
 
 .footer-links a {
-    color: #bbb;
+    color: #555;
     margin: 0 8px;
     text-decoration: none;
     font-size: 13px;
 }
 
 .footer-links a:hover {
-    color: #fff;
+    color: #111;
     text-decoration: underline;
 }
