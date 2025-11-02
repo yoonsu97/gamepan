@@ -22,7 +22,10 @@
         </div>
         <br>
         <button type="submit" class="primary">생성</button>
-        <a th:href="@{/admin/boards}">취소</a>
+        <button type="button" class="btn-delete"
+                th:onclick="|window.location.href='@{/admin/boards}'|">
+            취소
+        </button>
     </form>
     </div>
 </th:block>
