@@ -39,6 +39,9 @@
             <div th:if="${param.signup}" class="alert alert-success">
                 회원가입이 완료되었습니다. 로그인해 주세요.
             </div>
+            <div th:if="${param.reason}" class="alert alert-success">
+                닉네임 변경으로 인해 자동 로그아웃되었습니다.
+            </div>
         </form>
     </div>
 </div>

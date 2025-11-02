@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByIdAndIsDeletedFalse(Long id);
     Optional<Post> findByIdAndIsDeletedTrue(Long id);
     List<Post> findTop10ByBoardIdAndIsDeletedFalseOrderByCreatedAtDesc(Long boardId);
-    Page<Post> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(Long userId, Pageable pageable);
+    @Query("""
+    SELECT p
+    FROM Post p
+    JOIN p.board b
+    WHERE p.user.id = :userId
+      AND p.isDeleted = false
+      AND b.isDeleted = false
+    ORDER BY p.createdAt DESC
+""")
+    Page<Post> findByUserIdAndActiveBoard(@Param("userId") Long userId, Pageable pageable);
+    //Page<Post> findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(Long userId, Pageable pageable);
 
     // 내림차순 정렬
     List<Post> findAllByBoardIdAndIsDeletedFalseOrderByIdDesc(Long boardId);

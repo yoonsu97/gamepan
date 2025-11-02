@@ -9,11 +9,14 @@ import com.gamepan.gameboard.domain.user.dto.NicknameUpdateRequest;
 import com.gamepan.gameboard.domain.user.dto.PasswordUpdateRequest;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -70,7 +73,9 @@ public class MypageController {
     public String updateNickname(@AuthenticationPrincipal(expression = "user") User currentUser,
                                  @Valid NicknameUpdateRequest req,
                                  BindingResult bindingResult,
-                                 RedirectAttributes ra) {
+                                 RedirectAttributes ra,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
 
         if (bindingResult.hasErrors()) {
             ra.addFlashAttribute("org.springframework.validation.BindingResult.nicknameForm", bindingResult);
@@ -79,8 +84,12 @@ public class MypageController {
         }
 
         userService.updateNickname(currentUser.getId(), req.getNickname());
-        ra.addFlashAttribute("updated", "nickname");
-        return "redirect:/mypage/profile";
+
+        // 보안 컨텍스트 포함 전체 로그아웃 처리
+        new SecurityContextLogoutHandler().logout(request, response, null);
+
+        ra.addFlashAttribute("logoutReason", "닉네임 변경으로 인해 자동 로그아웃되었습니다.");
+        return "redirect:/login?reason=success";
     }
 
     @PostMapping("/mypage/profile/password")

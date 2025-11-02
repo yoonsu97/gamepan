@@ -18,13 +18,27 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteByPost_IdAndUser_Id(Long postId, Long userId);
 
     // 내가 좋아요 한 게시글 가져오기(삭제 되지 않은 게시글)
-    @Query("""
-        SELECT p FROM Post p
+    @Query(
+            value = """
+        SELECT p
+        FROM Post p
+        JOIN p.board b
         JOIN Like l ON l.post.id = p.id
         WHERE l.user.id = :userId
           AND p.isDeleted = false
+          AND b.isDeleted = false
         ORDER BY p.createdAt DESC
-    """)
+    """,
+            countQuery = """
+        SELECT COUNT(p)
+        FROM Post p
+        JOIN p.board b
+        JOIN Like l ON l.post.id = p.id
+        WHERE l.user.id = :userId
+          AND p.isDeleted = false
+          AND b.isDeleted = false
+    """
+    )
     Page<Post> findLikedPosts(@Param("userId") Long userId, Pageable pageable);
 
 }
