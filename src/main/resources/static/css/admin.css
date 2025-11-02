@@ -340,82 +340,110 @@
 }
 
 /* ==========================================================
-   ✅ 상세 페이지 버튼 스타일 복구 (우선순위 강화)
+   ✅ 상세 페이지 및 생성/수정 페이지 버튼 스타일 통합 복구
    ========================================================== */
 .admin-board-page button,
 .admin-user-page button,
 .admin-report-page button,
-.admin-deleted-page button {
+.admin-deleted-page button,
+.admin-board-form-page button {
     all: unset;
     display: inline-block;
-    padding: 6px 10px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
     border: 1px solid #d1d5db;
     background: #fff;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     transition: all 0.2s ease;
     text-align: center;
+    line-height: 1.3;
 }
 
 .admin-board-page button:hover,
 .admin-user-page button:hover,
 .admin-report-page button:hover,
-.admin-deleted-page button:hover {
+.admin-deleted-page button:hover,
+.admin-board-form-page button:hover {
     background: #f3f4f6;
+    transform: translateY(-1px);
 }
 
+/* ✅ 기본 검정(Primary) 버튼 */
 .admin-board-page button.primary,
 .admin-user-page button.primary,
 .admin-report-page button.primary,
-.admin-deleted-page button.primary {
+.admin-deleted-page button.primary,
+.admin-board-form-page button.primary,
+.admin-board-form-page button[type="submit"]:not(.btn-cancel) {
     background: #111827;
     color: #fff;
     border-color: #111827;
 }
+.admin-board-page button.primary:hover,
+.admin-user-page button.primary:hover,
+.admin-report-page button.primary:hover,
+.admin-deleted-page button.primary:hover,
+.admin-board-form-page button.primary:hover,
+.admin-board-form-page button[type="submit"]:not(.btn-cancel):hover {
+    background: #1f2937;
+}
+
+/* ✅ 삭제 버튼 (빨강) */
 .admin-board-page .btn-delete,
 .admin-user-page .btn-delete,
 .admin-report-page .btn-delete,
-.admin-deleted-page .btn-delete {
-    background-color: #ef4444; /* 빨강 */
-    color: white;
+.admin-deleted-page .btn-delete,
+.admin-board-form-page .btn-cancel {
+    background-color: #ef4444;
+    color: #fff;
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.95rem;
-    font-weight: 500;
-    transition: background 0.2s ease;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
 }
-
 .admin-board-page .btn-delete:hover,
 .admin-user-page .btn-delete:hover,
 .admin-report-page .btn-delete:hover,
-.admin-deleted-page .btn-delete:hover {
-    background-color: #dc2626; /* hover 시 더 진한 빨강 */
+.admin-deleted-page .btn-delete:hover,
+.admin-board-form-page .btn-cancel:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
 }
 
+/* ✅ 복구 버튼 (파랑) */
 .admin-board-page .btn-restore,
 .admin-user-page .btn-restore,
 .admin-report-page .btn-restore,
 .admin-deleted-page .btn-restore {
-    background-color: #2563eb; /* 기본 파랑 */
+    background-color: #2563eb;
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.95rem;
-    font-weight: 500;
-    transition: background 0.2s ease;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
 }
-
 .admin-board-page .btn-restore:hover,
 .admin-user-page .btn-restore:hover,
 .admin-report-page .btn-restore:hover,
 .admin-deleted-page .btn-restore:hover {
-    background-color: #1d4ed8; /* hover 시 진한 파랑 */
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
 }
+
+/* ✅ 버튼 간 간격 통일 */
+.admin-board-form-page button + button,
+.admin-board-page button + button {
+    margin-left: 8px;
+}
+
 
 
 /* ==========================================================
