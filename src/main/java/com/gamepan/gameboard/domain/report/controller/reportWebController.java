@@ -44,6 +44,6 @@ public class reportWebController {
         ra.addFlashAttribute("reportId", reportId);
 
         // 신고 후 원래 게시글로 리다이렉트
-        return "redirect:/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId + "?noInc=true";
     }
 }

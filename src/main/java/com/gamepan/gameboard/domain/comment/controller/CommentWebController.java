@@ -39,7 +39,7 @@ public class CommentWebController {
         commentService.createComment(postId, currentUser, dto);
 
         // 등록 후 게시글 상세페이지로 리다이렉트
-        return "redirect:/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId + "?noInc=true";
     }
 
     // 댓글 수정
@@ -56,7 +56,7 @@ public class CommentWebController {
 
         commentService.updateComment(commentId, currentUser, dto);
 
-        return "redirect:/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId + "?noInc=true";
     }
 
     // 댓글 삭제
@@ -68,6 +68,6 @@ public class CommentWebController {
 
         commentService.deleteComment(commentId, currentUser);
 
-        return "redirect:/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId + "?noInc=true";
     }
 }

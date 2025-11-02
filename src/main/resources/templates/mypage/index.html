@@ -28,7 +28,7 @@
     <!-- 탭 -->
     <div class="tabs">
         <a class="tab" th:classappend="${activeTab=='posts'} ? ' active'"    th:href="@{/mypage(tab='posts')}">작성글</a>
-        <a class="tab" th:classappend="${activeTab=='comments'} ? ' active'" th:href="@{/mypage(tab='comments')}">작성댓글</a>
+        <a class="tab" th:classappend="${activeTab=='comments'} ? ' active'" th:href="@{/mypage(tab='comments')}">댓글 작성한 글</a>
         <a class="tab" th:classappend="${activeTab=='likes'} ? ' active'"    th:href="@{/mypage(tab='likes')}">좋아요한 글</a>
     </div>
 

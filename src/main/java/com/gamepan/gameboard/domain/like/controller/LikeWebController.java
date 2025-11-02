@@ -32,6 +32,6 @@ public class LikeWebController {
         likeService.toggleLike(postId, principal.getUser());
 
         // 좋아요 클릭 후 다시 게시글 상세 페이지로 리다이렉트
-        return "redirect:/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId + "?noInc=true";
     }
 }

@@ -88,8 +88,11 @@ public class PostWebController {
     @GetMapping("/{postId}")
     public String getPostDetail(@PathVariable Long boardId,
                                 @PathVariable Long postId,
+                                @RequestParam(name = "noInc", defaultValue = "false") boolean noInc,
                                 @AuthenticationPrincipal(expression = "user") User currentUser,
                                 Model model) {
+        if (!noInc) {postService.increaseViewCount(postId);}
+
         model.addAttribute("board", boardService.getBoard(boardId));
         model.addAttribute("post", postService.getPost(postId));
         model.addAttribute("comments", commentService.getCommentsByPost(postId));
@@ -106,6 +109,7 @@ public class PostWebController {
     public String showEditForm(@PathVariable Long boardId,
                                @PathVariable Long postId,
                                Model model) {
+
         Post post = postService.getPost(postId);
 
         model.addAttribute("board", boardService.getBoard(boardId));
@@ -128,7 +132,7 @@ public class PostWebController {
 
         postService.updatePost(postId, currentUser, dto);
 
-        return "redirect:/boards/" + boardId + "/posts/" + postId;
+        return "redirect:/boards/" + boardId + "/posts/" + postId + "?noInc=true";
     }
 
 

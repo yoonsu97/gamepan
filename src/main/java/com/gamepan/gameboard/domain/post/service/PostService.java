@@ -58,7 +58,7 @@ public class PostService {
     // 내 작성글 페이지네이션
     @Transactional
     public Page<Post> findPageByAuthor(Long userId, Pageable pageable) {
-        return postRepository.findByUserIdAndIsDeletedFalseOrderByCreatedAtDesc(userId, pageable);
+        return postRepository.findByUserIdAndActiveBoard(userId, pageable);
 
     }
 
@@ -80,14 +80,19 @@ public class PostService {
     @Transactional
     public Post getPost(Long id) {
         // 아이디로 게시글 조회, 없으면 예외
+
+        return postRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    public void increaseViewCount(Long id) {
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
         postRepository.incrementViewCount(id);
         post.setViewCount(post.getViewCount() + 1);
-
-        return post;
     }
+
 
     // 최근 생성 게시물을 10개 가져오기
     public List<Post> getRecentPostsByBoard(Long boardId) {

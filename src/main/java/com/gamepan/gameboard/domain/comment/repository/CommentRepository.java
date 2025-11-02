@@ -26,12 +26,34 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Post> findPostByCommentId(@Param("commentId") Long commentId);
 
     // 해당 유저의 댓글의 게시글을 가져옴
-    @Query("""
-        SELECT DISTINCT c.post
+    @Query(
+            value = """
+    SELECT p
+    FROM Post p
+    JOIN p.board b
+    WHERE p.isDeleted = false
+      AND b.isDeleted = false
+      AND EXISTS (
+        SELECT 1
         FROM Comment c
         WHERE c.user.id = :userId
-          AND c.post.isDeleted = false
-        ORDER BY c.post.createdAt DESC
-    """)
+          AND c.post = p
+      )
+    ORDER BY p.createdAt DESC
+  """,
+            countQuery = """
+    SELECT COUNT(p)
+    FROM Post p
+    JOIN p.board b
+    WHERE p.isDeleted = false
+      AND b.isDeleted = false
+      AND EXISTS (
+        SELECT 1
+        FROM Comment c
+        WHERE c.user.id = :userId
+          AND c.post = p
+      )
+  """
+    )
     Page<Post> findCommentedPostsByUser(@Param("userId") Long userId, Pageable pageable);
 }

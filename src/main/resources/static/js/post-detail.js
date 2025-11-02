@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 // redirect/HTML 응답 → 새로고침으로 반영
-                location.reload();
+                location.href = `/boards/${boardId}/posts/${postId}?noInc=true`;
             } catch (e) {
                 alert("서버 오류가 발생했습니다.");
             } finally {
