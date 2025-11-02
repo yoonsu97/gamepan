@@ -4,6 +4,7 @@
 <!-- ↑ admin-layout.html의 layout(content) fragment를 불러오고, 현재 페이지의 content를 전달 -->
 
 <th:block th:fragment="content">
+    <div class="admin-board-form-page">
     <h2>게시판 생성</h2>
 
     <form th:action="@{/admin/boards/create}" method="post">
@@ -23,5 +24,6 @@
         <button type="submit" class="primary">생성</button>
         <a th:href="@{/admin/boards}">취소</a>
     </form>
+    </div>
 </th:block>
 </html>
