@@ -1,58 +1,70 @@
-body {
-    font-family: system-ui, Arial;
+/* ==========================================================
+   ✅ 관리자 대시보드(관리 목록) 전용 스타일
+   ========================================================== */
+
+/* 전체 컨테이너 정렬 */
+main.container {
+    max-width: 1200px;
+    margin: 80px auto 100px; /* ✅ 상단 여백 크게 (기존보다 아래로) */
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
-h2 {
-    margin-bottom: 10px;
+/* 제목 스타일 */
+main.container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 10px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+/* 카드 그리드 정렬 */
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
 }
 
-th, td {
-    border: 1px solid #e5e7eb;
-    padding: 8px;
-    text-align: center;
-}
-
-th {
-    background: #f8fafc;
-}
-
-.toolbar {
-    display: flex;
-    gap: 8px;
-    margin: 12px 0;
-    align-items: center;
-}
-
-.right {
-    margin-left: auto;
-}
-
-button {
-    padding: 6px 10px;
-    border: 1px solid #d1d5db;
+/* 카드 박스 디자인 */
+.admin-card {
     background: #fff;
-    cursor: pointer;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-button:hover {
-    background: #f3f4f6;
+.admin-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-button.primary {
-    background: #111827;
-    color: #fff;
-    border-color: #111827;
+/* 카드 제목 */
+.admin-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
-button.primary:hover {
-    background: #1f2937;
+/* 리스트 정리 */
+.admin-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-card li {
+    margin-bottom: 6px;
+}
+
+.admin-card a {
+    text-decoration: none;
+    color: #2563eb;
+    transition: color 0.2s ease;
+}
+
+.admin-card a:hover {
+    color: #1e40af;
 }

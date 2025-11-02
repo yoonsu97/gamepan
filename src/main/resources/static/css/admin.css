@@ -1,10 +1,24 @@
 /* ========== ADMIN LAYOUT ========== */
 .admin-container {
     display: flex;
-    gap: 40px; /* 사이드바와 본문 사이 여백 */
+    align-items: flex-start; /* 사이드바와 본문을 위 기준으로 정렬 */
+    justify-content: center; /* ✅ 전체를 화면 정중앙으로 정렬 */
+    gap: 40px;
+    margin-top: 20px;
+    padding: 0 20px;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    min-height: calc(100vh - 160px); /* 높이 통일 (화면 기준) */
+}
+
+.admin-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* ✅ 내용이 위로 정렬되도록 */
     align-items: flex-start;
-    margin-top: 40px;
-    padding: 0 40px;
+    min-height: calc(100vh - 160px); /* ✅ 본문 높이 통일 */
 }
 
 /* 사이드바 */
@@ -14,46 +28,35 @@
     width: 230px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transform: translate(120px, 35px);
     flex-shrink: 0;
+    position: sticky;
+    top: 40px; /* 위로 조금 올림 */
+    align-self: flex-start;
+    margin-top: 0 !important;
+    transform: none !important;
+    height: auto;
+    max-height: calc(100vh - 120px);
 }
 
+/* 사이드바 내부 */
 .admin-sidebar h3 {
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 12px;
 }
-
 .admin-sidebar ul {
     list-style: none;
     padding-left: 0;
     margin: 0;
 }
-
-.admin-sidebar li {
-    margin-bottom: 6px;
-}
-
-.admin-sidebar b {
-    display: block;
-    margin: 10px 0 5px;
-    color: #222;
-}
-
+.admin-sidebar li { margin-bottom: 6px; }
+.admin-sidebar b { display: block; margin: 10px 0 5px; color: #222; }
 .admin-sidebar a {
     text-decoration: none;
     color: #6b4eff;
     font-size: 0.9rem;
 }
-
-.admin-sidebar a:hover {
-    text-decoration: underline;
-}
-
-.admin-content {
-    display: flex;
-    justify-content: center;
-}
+.admin-sidebar a:hover { text-decoration: underline; }
 
 /* ========== ADMIN CARD GRID (대시보드용) ========== */
 .admin-grid {
@@ -205,8 +208,8 @@
     border-radius: 14px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.05);
     flex: 1;
-    max-width: 1150px;
-    margin: 40px auto;
+    max-width: 1200px;
+    margin: 40px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -335,6 +338,85 @@
     margin-bottom: 18px !important;
     box-sizing: border-box !important;
 }
+
+/* ==========================================================
+   ✅ 상세 페이지 버튼 스타일 복구 (우선순위 강화)
+   ========================================================== */
+.admin-board-page button,
+.admin-user-page button,
+.admin-report-page button,
+.admin-deleted-page button {
+    all: unset;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.admin-board-page button:hover,
+.admin-user-page button:hover,
+.admin-report-page button:hover,
+.admin-deleted-page button:hover {
+    background: #f3f4f6;
+}
+
+.admin-board-page button.primary,
+.admin-user-page button.primary,
+.admin-report-page button.primary,
+.admin-deleted-page button.primary {
+    background: #111827;
+    color: #fff;
+    border-color: #111827;
+}
+.admin-board-page .btn-delete,
+.admin-user-page .btn-delete,
+.admin-report-page .btn-delete,
+.admin-deleted-page .btn-delete {
+    background-color: #ef4444; /* 빨강 */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.admin-board-page .btn-delete:hover,
+.admin-user-page .btn-delete:hover,
+.admin-report-page .btn-delete:hover,
+.admin-deleted-page .btn-delete:hover {
+    background-color: #dc2626; /* hover 시 더 진한 빨강 */
+}
+
+.admin-board-page .btn-restore,
+.admin-user-page .btn-restore,
+.admin-report-page .btn-restore,
+.admin-deleted-page .btn-restore {
+    background-color: #2563eb; /* 기본 파랑 */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.admin-board-page .btn-restore:hover,
+.admin-user-page .btn-restore:hover,
+.admin-report-page .btn-restore:hover,
+.admin-deleted-page .btn-restore:hover {
+    background-color: #1d4ed8; /* hover 시 진한 파랑 */
+}
+
 
 /* ==========================================================
    ✅ 관리자 푸터 완전 중앙 고정 (flex 영향 완전 차단)

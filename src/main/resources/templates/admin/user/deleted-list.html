@@ -2,10 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/admin-layout :: layout(~{::content})}">
 
-<th:block th:fragment="content">
-    <div class="admin-board-page">
+<div th:fragment="content" class="admin-deleted-page">
+    <div class="page-header">
         <h2>삭제된 회원 관리</h2>
-
+    </div>
         <div th:if="${message}"
              style="color:#065f46; font-weight:600; margin-bottom:10px;"
              th:text="${message}"></div>
@@ -54,6 +54,5 @@
         </form>
 
         <script th:src="@{/js/admin-user.js}"></script>
-    </div>
-</th:block>
+</div>
 </html>

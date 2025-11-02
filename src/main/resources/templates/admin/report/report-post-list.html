@@ -2,10 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/admin-layout :: layout(~{::content})}">
 
-<th:block th:fragment="content">
-    <div class="admin-board-page">
-        <h2>신고 대기 목록</h2>
+<div th:fragment="content" class="admin-report-page">
 
+    <div class="page-header">
+        <h2>신고 대기 목록</h2>
+    </div>
         <!-- 알림 메시지 -->
         <div th:if="${toast}" class="alert-message success" th:text="${toast}"></div>
 
@@ -44,6 +45,5 @@
             </tr>
             </tbody>
         </table>
-    </div>
-</th:block>
+</div>
 </html>
