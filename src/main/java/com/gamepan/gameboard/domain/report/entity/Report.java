@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor @Builder
-@Table(name = "report_posts",
+@Table(name = "report",
         uniqueConstraints = @UniqueConstraint(
                 name = "uk_report_post_unique_per_user",
                 columnNames = {"reporter_id", "post_id"}
