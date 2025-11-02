@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -65,6 +66,9 @@ public class MypageController {
     @GetMapping("/mypage/profile")
     public String profile(@AuthenticationPrincipal(expression = "user") User currentUser, Model model) {
         model.addAttribute("currentUser", currentUser);
+        if (!model.containsAttribute("passwordForm")) {
+            model.addAttribute("passwordForm", new PasswordUpdateRequest());
+        }
         return "mypage/profile"; // templates/mypage/profile.html
     }
 
@@ -94,9 +98,11 @@ public class MypageController {
 
     @PostMapping("/mypage/profile/password")
     public String updatePassword(@AuthenticationPrincipal(expression = "user") User currentUser,
-                                 @Valid PasswordUpdateRequest req,
+                                 @Valid @ModelAttribute("passwordForm") PasswordUpdateRequest req,
                                  BindingResult bindingResult,
-                                 RedirectAttributes ra) {
+                                 RedirectAttributes ra,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) {
 
         // 1) Bean Validation 실패
         if (bindingResult.hasErrors()) {
@@ -105,7 +111,7 @@ public class MypageController {
             return "redirect:/mypage/profile";
         }
 
-        // 2) 비밀번호 확인 일치 여부(교차 필드 검증)
+        // 2) 새 비밀번호 확인
         if (!req.getNewPassword().equals(req.getPasswordConfirm())) {
             bindingResult.rejectValue("passwordConfirm", "password.mismatch", "비밀번호 확인이 일치하지 않습니다.");
             ra.addFlashAttribute("org.springframework.validation.BindingResult.passwordForm", bindingResult);
@@ -113,10 +119,13 @@ public class MypageController {
             return "redirect:/mypage/profile";
         }
 
-        // 3) 서비스 실행(현재 비밀번호 검증 포함)
+        // 3) 서비스 실행(현재 비번 검증 포함)
         userService.updatePassword(currentUser.getId(), req.getCurrentPassword(), req.getNewPassword());
 
-        ra.addFlashAttribute("updated", "password");
-        return "redirect:/mypage/profile";
+        // 4) 현재 세션 즉시 로그아웃(remember-me 쿠키도 같이 제거)
+        new SecurityContextLogoutHandler().logout(request, response, null);
+
+        // 5) 로그인 화면에서 안내 문구 노출
+        return "redirect:/login?passwordChanged";
     }
 }
