@@ -112,7 +112,7 @@ public class PostService {
         post.setContent(dto.getContent());
 
         // 엔티티 수정본 저장
-        return postRepository.save(post);
+        return post;
     }
 
     //  게시글 삭제 (Soft Delete 적용)
@@ -123,7 +123,6 @@ public class PostService {
         authorizationService.hasPostPermission(post, currentUser,ErrorCode.POST_FORBIDDEN);
 
         post.softDelete(); // BaseEntity의 softDelete() 메서드 호출
-        postRepository.save(post);
     }
 
     //  게시글 복구
@@ -139,7 +138,6 @@ public class PostService {
         authorizationService.hasPostPermission(post, currentUser,ErrorCode.POST_FORBIDDEN);
 
         post.restore();
-        postRepository.save(post);
     }
 
     // 검색

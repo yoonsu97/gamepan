@@ -74,7 +74,7 @@ public class CommentService {
         authorizationService.hasCommentPermission(comment, currentUser, ErrorCode.COMMENT_FORBIDDEN);
 
         comment.setContent(dto.getContent());
-        return commentRepository.save(comment);
+        return comment;
     }
 
 

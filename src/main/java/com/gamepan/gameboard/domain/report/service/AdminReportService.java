@@ -51,6 +51,5 @@ public class AdminReportService {
         report.setStatus(Report.Status.CONFIRMED);
         // 2) 게시글 소프트 삭제
         post.softDelete();
-        postRepository.save(post);
     }
 }
