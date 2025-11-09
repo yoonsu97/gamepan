@@ -66,7 +66,7 @@ public class AdminBoardService {
         board.setName(dto.getName());
         board.setDescription(dto.getDescription());
 
-        return boardRepository.save(board);
+        return board;
     }
 
     // 게시판 삭제 (Soft Delete )
@@ -81,8 +81,6 @@ public class AdminBoardService {
         authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
         board.softDelete();
-
-        boardRepository.save(board);
     }
 
     // 게시판 복구 (게시글 포함 복구)
@@ -93,8 +91,6 @@ public class AdminBoardService {
         authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
         board.restore(); // 게시판 및 하위 게시글 복구
-
-        boardRepository.save(board);
     }
 
 

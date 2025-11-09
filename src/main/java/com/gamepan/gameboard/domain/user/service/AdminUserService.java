@@ -38,7 +38,6 @@ public class AdminUserService {
         authorizationService.AdminHasUserPermission(currentUser,ErrorCode.USER_FORBIDDEN);
 
         user.softDelete(); // BaseEntity의 softDelete() 메서드 호출
-        userRepository.save(user);
     }
 
     public int deleteUsers(List<Long> ids, User currentUser) {
@@ -63,7 +62,6 @@ public class AdminUserService {
         authorizationService.AdminHasUserPermission(currentUser, ErrorCode.USER_FORBIDDEN);
 
         user.restore(); // BaseEntity의 복구 메서드
-        userRepository.save(user);
     }
 
     public int restoreUsers(List<Long> ids, User currentUser) {

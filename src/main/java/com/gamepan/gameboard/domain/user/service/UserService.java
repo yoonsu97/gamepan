@@ -43,6 +43,7 @@ public class UserService {
                 .email(dto.getEmail())
                 .role(role)
                 .build();
+
         return userRepository.save(user);
     }
 
@@ -62,21 +63,6 @@ public class UserService {
         return userRepository.findAllByIsDeletedFalse();
     }
 
-    //Update - 사용자 정보 바꾸기(password, nickname 변경)
-    /*public User updateUser(Long id, UserUpdateRequestDto dto) {
-        User user = getUserById(id);
-        // 입력된 비밀번호가 있을 때 비밀번호를 수정
-        if(dto.getPassword() != null ){
-            user.updatePassword(dto.getPassword(), passwordEncoder);
-        }
-        // 입력된 닉네임이 있을 때 닉네임을 수정
-        if(dto.getNickname() != null){
-            user.updateNickname(dto.getNickname());
-        }
-
-        return userRepository.save(user);
-    }*/
-
     // 닉네임 변경
     @Transactional
     public void updateNickname(Long userId, String nickname) {
@@ -84,7 +70,6 @@ public class UserService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.updateNickname(nickname); // 엔티티에 세터대신 도메인 메서드 권장
-        // 영속 상태이므로 flush 시점에 자동 업데이트
     }
 
     // 비밀번호 변경
@@ -107,7 +92,6 @@ public class UserService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.softDelete(); // BaseEntity의 softDelete() 메서드 호출
-        userRepository.save(user);
     }
 
     //  복구
@@ -116,6 +100,5 @@ public class UserService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.restore(); // BaseEntity의 restore() 메서드 호출
-        userRepository.save(user);
     }
 }
