@@ -35,7 +35,7 @@
             </div>
 
             <!-- 관리자 바: 관리자에게만 노출 -->
-            <a sec:authorize="hasRole('ADMIN')" class="btn" th:href="@{/admin}">
+            <a sec:authorize="hasAuthority('A')" class="btn" th:href="@{/admin}">
                 관리자
             </a>
         </div>

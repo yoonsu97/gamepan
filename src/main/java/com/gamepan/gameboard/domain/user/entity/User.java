@@ -7,7 +7,6 @@ import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
+@Table(name = "users")
 @SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
 // 시용자(유저) 엔티티
 public class User extends BaseEntity {
@@ -37,8 +37,8 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;           // 사용자 이메일
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Convert(converter = RoleConverter.class)
+    @Column(nullable = false, length = 1)
     private Role role;              // 사용자 권환
 
     @Column(nullable = false)
@@ -71,7 +71,4 @@ public class User extends BaseEntity {
         this.password = encodedPassword;;
     }
 
-    public void setAdmin(){
-        role =  Role.ADMIN;
-    }
 }
