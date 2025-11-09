@@ -6,10 +6,10 @@ import com.gamepan.gameboard.domain.board.repository.BoardRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.exception.BusinessException;
 import com.gamepan.gameboard.global.help.AuthorizationService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.gamepan.gameboard.global.exception.ErrorCode;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -17,13 +17,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AdminBoardService {
     private final BoardRepository boardRepository;
     private final AuthorizationService authorizationService;
 
 
     // 게시판 생성 (중복 검사)
+    @Transactional
     public Board createBoard(User currentUser, BoardRequestDto dto) {
         if (boardRepository.existsByCodeAndIsDeletedFalse(dto.getCode())) {
             throw new BusinessException(ErrorCode.BOARD_DUPLICATE);
@@ -56,20 +57,20 @@ public class AdminBoardService {
     }
 
     // 게시판 수정
+    @Transactional
     public Board updateBoard(long id, User currentUser, BoardRequestDto dto) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
 
         authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
-        board.setCode(dto.getCode());
-        board.setName(dto.getName());
-        board.setDescription(dto.getDescription());
+        board.updateAll(dto.getCode(), dto.getName(), dto.getDescription());
 
         return board;
     }
 
     // 게시판 삭제 (Soft Delete )
+    @Transactional
     public void softDeleteBoard(Long id, User currentUser) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));
@@ -84,6 +85,7 @@ public class AdminBoardService {
     }
 
     // 게시판 복구 (게시글 포함 복구)
+    @Transactional
     public void restoreBoard(Long id, User currentUser) {
         Board board = boardRepository.findByIdAndIsDeletedTrue(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND));

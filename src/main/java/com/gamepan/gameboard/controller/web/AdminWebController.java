@@ -138,21 +138,21 @@ public class AdminWebController {
     }
 
     /* 신고 취소  */
-    @PostMapping("/reports/posts/{reportId}/cancel")
-    public String cancel(@PathVariable Long reportId,
+    @PostMapping("/reports/posts/{userId}/cancel")
+    public String cancel(@PathVariable Long userId,
                          @AuthenticationPrincipal(expression = "user") User currentUser,
                          RedirectAttributes ra) {
-        adminreportService.cancel(reportId, currentUser);
+        adminreportService.cancel(userId, currentUser);
         ra.addFlashAttribute("toast", "신고를 취소했습니다.");
         return "redirect:/admin/reports/posts";
     }
 
     /* 삭제 확정 (게시글 삭제) */
-    @PostMapping("/reports/posts/{reportId}/confirm")
-    public String confirmAndDelete(@PathVariable Long reportId,
+    @PostMapping("/reports/posts/{userId}/confirm")
+    public String confirmAndDelete(@PathVariable Long userId,
                                    @AuthenticationPrincipal(expression = "user") User currentUser,
                                    RedirectAttributes ra) {
-        adminreportService.confirmAndDelete(reportId, currentUser);
+        adminreportService.confirmAndDelete(userId, currentUser);
         ra.addFlashAttribute("toast", "신고 승인 및 게시글을 삭제했습니다.");
         return "redirect:/admin/reports/posts";
     }

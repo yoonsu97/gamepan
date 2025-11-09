@@ -8,11 +8,10 @@ import com.gamepan.gameboard.domain.user.exception.DuplicateUsernameException;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import com.gamepan.gameboard.global.exception.BusinessException;
 import com.gamepan.gameboard.global.exception.ErrorCode;
-import com.gamepan.gameboard.global.help.AuthorizationService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,13 +19,13 @@ import java.util.List;
 // 사용자 관련 비즈니스 로직 처리를 위한 서비스
 @Service
 @RequiredArgsConstructor //userRepository 의존 주입 생성자 자동 생성
-@Transactional // 데이터베이스 관련 작업시 transaction으로 묶어서 작업
+@Transactional(readOnly = true) // 데이터베이스 관련 작업시 transaction으로 묶어서 작업
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthorizationService authorizationService;
 
     // Create - 유저 객체 만들기
+    @Transactional
     public User createUser(UserCreateRequestDto dto, Role role) {
         // 유저 객체 생성전 중복 검사 (username, email)
         if (userRepository.existsByUsernameAndIsDeletedFalse(dto.getUsername())){
@@ -87,6 +86,7 @@ public class UserService {
     }
 
     //  삭제 (Soft Delete 적용)
+    @Transactional
     public void softDeleteUser(Long id) {
         User user = userRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -95,6 +95,7 @@ public class UserService {
     }
 
     //  복구
+    @Transactional
     public void restoreUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

@@ -1,12 +1,13 @@
 package com.gamepan.gameboard.domain.report.entity;
 
 import com.gamepan.gameboard.domain.post.entity.Post;
+import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor @AllArgsConstructor @Builder
 @Table(name = "reports",
         uniqueConstraints = @UniqueConstraint(
@@ -25,8 +26,9 @@ public class Report extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reporter_id", nullable = false)
-    private Long reporterId;        // 신고한 사용자 ID
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User user;        // 신고한 사용자 ID
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id")
@@ -36,4 +38,8 @@ public class Report extends BaseEntity {
     @Column(nullable = false, length = 20)
     @Builder.Default
     private Status status = Status.PENDING;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

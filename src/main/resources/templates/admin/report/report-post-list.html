@@ -27,7 +27,7 @@
                     <a th:href="@{'/boards/' + ${r.post.board.id} + '/posts/' + ${r.post.id}}"
                        th:text="${r.post.title}">제목</a>
                 </td>
-                <td th:text="${r.reporterId}">123</td>
+                <td th:text="${r.user.id}">123</td>
                 <td th:text="${#temporals.format(r.createdAt,'yyyy.MM.dd HH:mm')}">2025.01.01 12:34</td>
                 <td>
                     <form th:action="@{'/admin/reports/posts/' + ${r.id} + '/cancel'}"

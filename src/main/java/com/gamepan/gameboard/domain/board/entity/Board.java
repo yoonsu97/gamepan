@@ -1,5 +1,6 @@
 package com.gamepan.gameboard.domain.board.entity;
 
+import com.gamepan.gameboard.domain.board.dto.BoardRequestDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -15,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @Table(name = "boards")
@@ -42,10 +42,11 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
-    // ===== 연관관계 편의 메서드 =====
-    public void addPost(Post post) {
-        posts.add(post);
-        post.setBoard(this);
+
+    public void updateAll(String code, String name, String description) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
     }
 
     // 게시판 삭제 시 게시글도 Soft Delete
