@@ -7,25 +7,21 @@ import com.gamepan.gameboard.domain.post.repository.PostRepository;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.exception.BusinessException;
 import com.gamepan.gameboard.global.exception.ErrorCode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import static org.springframework.http.HttpStatus.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class LikeService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
 
     // 내가 좋아요 한 게시글 페이지네이션
-    @Transactional
     public Page<Post> findLikedPostsPage(Long userId, Pageable pageable) {
         return likeRepository.findLikedPosts(userId, pageable);
     }

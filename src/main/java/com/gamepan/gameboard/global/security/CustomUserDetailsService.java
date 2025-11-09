@@ -15,7 +15,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         // 로그인 시 Security가 자돟으로 호출하는 메서드 // 사용자 로그인 아이디로 사용자를 찾아 CustomUserDetails로 감싸 Security에게 전달

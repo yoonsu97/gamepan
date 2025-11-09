@@ -6,26 +6,23 @@ import com.gamepan.gameboard.domain.post.dto.PostRequestDto;
 import com.gamepan.gameboard.domain.post.dto.PostResponseDto;
 import com.gamepan.gameboard.domain.post.entity.Post;
 import com.gamepan.gameboard.domain.post.repository.PostRepository;
-import com.gamepan.gameboard.domain.user.entity.Role;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.domain.user.repository.UserRepository;
 import com.gamepan.gameboard.global.exception.BusinessException;
 import com.gamepan.gameboard.global.exception.ErrorCode;
 import com.gamepan.gameboard.global.help.AuthorizationService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 // 게시글 관련 비즈니스 로직 처리를 위한 서비스
 @Service
 @RequiredArgsConstructor //postRepository 의존 주입 생성자 자동 생성
-@Transactional // DB 관련 작업 Transactional 묶어서 작업
+@Transactional(readOnly = true) // DB 관련 작업 Transactional 묶어서 작업
 public class PostService {
     private final PostRepository postRepository; //DB 접근을 위한 Repository 의존성 주입
     private final UserRepository userRepository;
@@ -33,6 +30,7 @@ public class PostService {
     private final AuthorizationService authorizationService;
 
     // 게시글 생성 메서드
+    @Transactional
     public Post createPost(Long boardId, Long userId, PostRequestDto dto) {
         Board board = boardRepository.findByIdAndIsDeletedFalse(boardId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
@@ -56,7 +54,6 @@ public class PostService {
     }
 
     // 내 작성글 페이지네이션
-    @Transactional
     public Page<Post> findPageByAuthor(Long userId, Pageable pageable) {
         return postRepository.findByUserIdAndActiveBoard(userId, pageable);
 
@@ -77,7 +74,6 @@ public class PostService {
     }
 
     // 상세조회
-    @Transactional
     public Post getPost(Long id) {
         // 아이디로 게시글 조회, 없으면 예외
 
@@ -85,6 +81,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
     }
 
+    @Transactional
     public void increaseViewCount(Long id) {
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
@@ -100,6 +97,7 @@ public class PostService {
     }
 
     // 게시글 수정
+    @Transactional
     public Post updatePost(Long id, User currentUser ,PostRequestDto dto) {
         // 기존 게시글 찾기. 없으면 예외
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
@@ -116,6 +114,7 @@ public class PostService {
     }
 
     //  게시글 삭제 (Soft Delete 적용)
+    @Transactional
     public void softDeletePost(Long id, User currentUser) {
         Post post = postRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
@@ -126,6 +125,7 @@ public class PostService {
     }
 
     //  게시글 복구
+    @Transactional
     public void restorePost(Long id, User currentUser) {
         Post post = postRepository.findByIdAndIsDeletedTrue(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));

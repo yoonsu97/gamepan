@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ReportService {
 
     private final ReportRepository reportRepository;
@@ -23,6 +23,7 @@ public class ReportService {
     private final PostRepository postRepository;
 
     // 사용자: 게시글 신고
+    @Transactional
     public Long submit(Long userId, ReportPostRequest req) {
         User user = userRepository.findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -43,8 +44,7 @@ public class ReportService {
         return reportRepository.save(report).getId();
     }
 
-    // 이미 신고한 게시물인지 확인
-    @Transactional(readOnly = true)
+    // 이미 신고한 게시물인지 확인)
     public boolean isAlreadyReported(Long userId, Long postId) {
         if (userId == null) return false; // 비로그인 사용자
         return reportRepository.existsByUser_IdAndPost_Id(userId, postId);

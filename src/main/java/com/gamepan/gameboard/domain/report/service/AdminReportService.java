@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class AdminReportService {
     private final ReportRepository reportRepository;
     private final PostRepository postRepository;
@@ -28,6 +28,7 @@ public class AdminReportService {
     }
 
     // 관리자: 신고 취소(기각에 해당)
+    @Transactional
     public void cancel(Long reportId, User currentUser) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.REPORT_NOT_FOUND));
@@ -38,6 +39,7 @@ public class AdminReportService {
     }
 
     // 관리자: 삭제 확정(신고 인정 + 게시글 소프트 딜리트)
+    @Transactional
     public void confirmAndDelete(Long reportId, User currentUser) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.REPORT_NOT_FOUND));
