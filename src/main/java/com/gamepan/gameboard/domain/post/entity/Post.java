@@ -3,6 +3,7 @@ package com.gamepan.gameboard.domain.post.entity;
 import com.gamepan.gameboard.domain.board.entity.Board;
 import com.gamepan.gameboard.domain.comment.entity.Comment;
 import com.gamepan.gameboard.domain.like.entity.Like;
+import com.gamepan.gameboard.domain.report.entity.Report;
 import com.gamepan.gameboard.domain.user.entity.User;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -36,12 +37,6 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
-
     @Column(nullable = false, length = 50)
     private String title;                   // 게시글  제목
 
@@ -60,6 +55,15 @@ public class Post extends BaseEntity {
 
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
 
     // 게시글 soft Delete
     public void softDelete() {

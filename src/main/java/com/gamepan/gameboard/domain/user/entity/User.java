@@ -3,6 +3,7 @@ package com.gamepan.gameboard.domain.user.entity;
 import com.gamepan.gameboard.domain.comment.entity.Comment;
 import com.gamepan.gameboard.domain.like.entity.Like;
 import com.gamepan.gameboard.domain.post.entity.Post;
+import com.gamepan.gameboard.domain.report.entity.Report;
 import com.gamepan.gameboard.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,6 +54,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Report> reports = new ArrayList<>();
 
 
     public void softDelete() {
