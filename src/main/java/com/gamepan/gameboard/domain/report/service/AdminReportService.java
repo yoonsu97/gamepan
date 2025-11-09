@@ -34,7 +34,7 @@ public class AdminReportService {
 
         authorizationService.hasReportPermission(currentUser, ErrorCode.REPORT_FORBIDDEN);
 
-        report.setStatus(Report.Status.CANCELED);
+        report.updateStatus(Report.Status.CANCELED);
     }
 
     // 관리자: 삭제 확정(신고 인정 + 게시글 소프트 딜리트)
@@ -48,7 +48,7 @@ public class AdminReportService {
         authorizationService.hasReportPermission(currentUser, ErrorCode.REPORT_FORBIDDEN);
 
         // 1) 신고 상태 확정
-        report.setStatus(Report.Status.CONFIRMED);
+        report.updateStatus(Report.Status.CONFIRMED);
         // 2) 게시글 소프트 삭제
         post.softDelete();
     }

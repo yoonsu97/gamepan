@@ -42,7 +42,7 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         postRepository.incrementCommentCount(postId);
-        post.setCommentCount(post.getCommentCount() + 1);
+        post.updateCommentCount(post.getCommentCount() + 1);
 
         return savedComment;
     }
@@ -73,7 +73,7 @@ public class CommentService {
 
         authorizationService.hasCommentPermission(comment, currentUser, ErrorCode.COMMENT_FORBIDDEN);
 
-        comment.setContent(dto.getContent());
+        comment.updateContent(dto.getContent());
         return comment;
     }
 
@@ -89,7 +89,7 @@ public class CommentService {
         authorizationService.hasCommentPermission(comment, currentUser, ErrorCode.COMMENT_FORBIDDEN);
 
         postRepository.decrementCommentCount(post.getId());
-        post.setCommentCount(Math.max(0, post.getCommentCount() - 1));
+        post.updateCommentCount(Math.max(0, post.getCommentCount() - 1));
         commentRepository.delete(comment);
     }
 

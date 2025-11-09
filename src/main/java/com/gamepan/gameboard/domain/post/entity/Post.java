@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @Table(name = "posts")
@@ -75,6 +74,25 @@ public class Post extends BaseEntity {
         this.isDeleted = false;
     }
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void updateViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public void updateLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void updateCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
     //private LocalDateTime deletedAt;        // 게시글 삭제일(선택)
 

@@ -90,7 +90,7 @@ public class PostService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
 
         postRepository.incrementViewCount(id);
-        post.setViewCount(post.getViewCount() + 1);
+        post.updateViewCount(post.getViewCount() + 1);
     }
 
 
@@ -108,8 +108,8 @@ public class PostService {
         authorizationService.hasPostPermission(post, currentUser,ErrorCode.POST_FORBIDDEN);
 
         // 기존 엔티티 변경 -> 이미 있는거를 조회해서, 제목이랑 내용 수정하기 위함.
-        post.setTitle(dto.getTitle());
-        post.setContent(dto.getContent());
+        post.updateTitle(dto.getTitle());
+        post.updateContent(dto.getContent());
 
         // 엔티티 수정본 저장
         return post;

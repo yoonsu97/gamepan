@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor @AllArgsConstructor @Builder
 @Table(name = "reports",
         uniqueConstraints = @UniqueConstraint(
@@ -38,4 +38,8 @@ public class Report extends BaseEntity {
     @Column(nullable = false, length = 20)
     @Builder.Default
     private Status status = Status.PENDING;
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

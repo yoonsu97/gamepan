@@ -62,9 +62,7 @@ public class AdminBoardService {
 
         authorizationService.hasBoardPermission(currentUser, ErrorCode.BOARD_FORBIDDEN);
 
-        board.setCode(dto.getCode());
-        board.setName(dto.getName());
-        board.setDescription(dto.getDescription());
+        board.updateAll(dto.getCode(), dto.getName(), dto.getDescription());
 
         return board;
     }
