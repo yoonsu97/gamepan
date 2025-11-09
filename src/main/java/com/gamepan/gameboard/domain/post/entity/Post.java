@@ -20,8 +20,8 @@ import java.util.List;
 @Setter
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
+@Table(name = "posts")
 @SQLDelete(sql = "UPDATE post SET is_deleted = true WHERE id = ?")
-
 public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

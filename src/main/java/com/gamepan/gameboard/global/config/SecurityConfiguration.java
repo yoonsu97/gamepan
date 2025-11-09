@@ -44,7 +44,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth     // 각 경로 접근 권한 지정
                         .requestMatchers("/login", "/signup","/gamepan","/css/**",
                                 "/js/**","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 누구나 접근 가능
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")                    // /admin은 ADMIN 권한 만 접근 가능
+                        .requestMatchers("/api/admin/**").hasAuthority("A")                    // /admin은 ADMIN 권한 만 접근 가능
                         .requestMatchers("/api/**").authenticated()                           // 나머지는 로그인 시 접근 가능
                         .anyRequest().authenticated() //.permitAll()
                 )

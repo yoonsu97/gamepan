@@ -18,6 +18,7 @@ public enum ErrorCode {
     USER_DUPLICATE(409, "이미 존재하는 사용자 이름 또는 이메일입니다."),
     USER_FORBIDDEN(403, "사용자에 대한 권한이 없습니다."),
     PASSWORD_NOT_MATCH(400, "비밀번호가 일치하지 않습니다."),
+    ROLE_CODE_NOT_FOUND(400, "잘못된 권한 코드입니다."),
 
     // === Board ===
     BOARD_NOT_FOUND(404, "게시판을 찾을 수 없습니다."),
