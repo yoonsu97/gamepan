@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @Table(name = "boards")
-@SQLDelete(sql = "UPDATE board SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE boards SET is_deleted = true WHERE id = ?")
 public class Board extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
