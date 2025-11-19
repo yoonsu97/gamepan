@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 //delete를 할 경우 이 쿼리로 대체하여 보냄
 @Table(name = "users")
-@SQLDelete(sql = "UPDATE user SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 // 시용자(유저) 엔티티
 public class User extends BaseEntity {
     @Id
